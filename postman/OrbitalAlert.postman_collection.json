@@ -1,0 +1,79 @@
+{
+  "info": {
+    "name": "Orbital Alert API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção de testes da API Orbital Alert para a Global Solution FIAP."
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:8080/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Aluno FIAP\",\n  \"email\": \"aluno@orbitalalert.app\",\n  \"password\": \"123456\",\n  \"role\": \"ANALYST\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:8080/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"aluno@orbitalalert.app\",\n  \"password\": \"123456\"\n}"
+        }
+      }
+    },
+    {"name":"Regions - List","request":{"method":"GET","url":"http://localhost:8080/api/regions"}},
+    {"name":"Regions - Get By Id","request":{"method":"GET","url":"http://localhost:8080/api/regions/1"}},
+    {
+      "name": "Regions - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:8080/api/regions",
+        "body": {"mode":"raw","raw":"{\n  \"id\": null,\n  \"name\": \"Nova Região de Teste\",\n  \"city\": \"Santos\",\n  \"state\": \"SP\",\n  \"latitude\": -23.9608,\n  \"longitude\": -46.3336,\n  \"satelliteRiskScore\": 61,\n  \"riskLevel\": \"MEDIUM\"\n}"}
+      }
+    },
+    {
+      "name": "Regions - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:8080/api/regions/1",
+        "body": {"mode":"raw","raw":"{\n  \"id\": 1,\n  \"name\": \"Margem Rio Tietê - Norte Atualizada\",\n  \"city\": \"São Paulo\",\n  \"state\": \"SP\",\n  \"latitude\": -23.50052,\n  \"longitude\": -46.62423,\n  \"satelliteRiskScore\": 85,\n  \"riskLevel\": \"HIGH\"\n}"}
+      }
+    },
+    {"name":"Regions - Delete","request":{"method":"DELETE","url":"http://localhost:8080/api/regions/4"}},
+    {"name":"Sensors - List","request":{"method":"GET","url":"http://localhost:8080/api/sensors"}},
+    {"name":"Sensors - Get By Id","request":{"method":"GET","url":"http://localhost:8080/api/sensors/1"}},
+    {
+      "name": "Sensors - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:8080/api/sensors",
+        "body": {"mode":"raw","raw":"{\n  \"id\": null,\n  \"regionId\": 1,\n  \"type\": \"WATER_LEVEL\",\n  \"status\": \"ACTIVE\",\n  \"unit\": \"%\"\n}"}
+      }
+    },
+    {"name":"Sensors - Delete","request":{"method":"DELETE","url":"http://localhost:8080/api/sensors/7"}},
+    {
+      "name": "Readings - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://localhost:8080/api/readings",
+        "body": {"mode":"raw","raw":"{\n  \"sensorId\": 2,\n  \"value\": 86.4\n}"}
+      }
+    },
+    {"name":"Readings - Latest","request":{"method":"GET","url":"http://localhost:8080/api/readings/latest"}},
+    {"name":"Alerts - List","request":{"method":"GET","url":"http://localhost:8080/api/alerts"}},
+    {"name":"Alerts - Active","request":{"method":"GET","url":"http://localhost:8080/api/alerts/active"}},
+    {"name":"Alerts - Resolve","request":{"method":"PUT","url":"http://localhost:8080/api/alerts/1/resolve"}}
+  ]
+}
