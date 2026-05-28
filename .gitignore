@@ -63,3 +63,7 @@ yarn-error.log*
 build/
 out/
 coverage/
+
+# Maven Wrapper local download
+backend/.mvn/wrapper/apache-maven-*/
+backend/.mvn/wrapper/apache-maven-*.zip
