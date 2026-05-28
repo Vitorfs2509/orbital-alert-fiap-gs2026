@@ -1,9 +1,13 @@
 Nome do grupo: Orbital Alert
 
 Integrantes:
-Yuri Monteiro Zacarioto - RM550952
-Vitor Futida Sternik - RM98697
-Caio Henrique Rocha da Silva - RM552308
-Vitor Reyes Souza - RM550766
+- Yuri Monteiro Zacarioto - RM550952
+- Vitor Futida Sternik - RM98697
+- Caio Henrique Rocha da Silva - RM552308
+- Vitor Reyes Souza - RM550766
 
-Link do vídeo pitch: A definir
+Link do vídeo pitch:
+A definir
+
+Observação:
+O link será atualizado depois que o vídeo for gravado e enviado para YouTube, Google Drive, Vimeo ou outra plataforma.
