@@ -6,7 +6,7 @@ import { MetricCard } from './src/components/MetricCard';
 import { Alert, Region, RiskLevel } from './src/types';
 import { colors } from './src/theme/colors';
 
-type Screen = 'login' | 'dashboard' | 'regions' | 'alert-details';
+type Screen = 'login' | 'dashboard' | 'regions' | 'alert-details' | 'region-details';
 
 const riskColor = (risk: RiskLevel) => ({ LOW: colors.low, MEDIUM: colors.medium, HIGH: colors.high, CRITICAL: colors.critical }[risk]);
 
@@ -25,13 +25,19 @@ export default function App() {
 
   const openRegion = (region: Region) => {
     setSelectedRegion(region);
-    const related = alerts.find(a => a.regionId === region.id);
+
+    const related = alerts.find(
+      (alert) => alert.regionId === region.id && alert.status !== 'RESOLVED'
+    );
+
     if (related) {
       setSelectedAlert(related);
       setScreen('alert-details');
       return;
     }
-    setScreen('regions');
+
+    setSelectedAlert(null);
+    setScreen('region-details');
   };
 
   return (
@@ -88,6 +94,23 @@ export default function App() {
                 </TouchableOpacity>
               ))}
             </>
+          )}
+
+          {screen === 'region-details' && selectedRegion && (
+            <View style={styles.alertCard}>
+              <Text style={styles.sectionTitle}>Detalhes de Monitoramento</Text>
+              <Text style={styles.alertTitle}>{selectedRegion.name}</Text>
+              <Text style={styles.alertLine}>Região: {selectedRegion.city}/{selectedRegion.state}</Text>
+              <Text style={styles.alertLine}>Nível de risco: <Text style={{ color: riskColor(selectedRegion.riskLevel) }}>{selectedRegion.riskLevel}</Text></Text>
+              <Text style={styles.alertLine}>Score satélite: {selectedRegion.satelliteRiskScore}</Text>
+              <Text style={styles.alertLine}>Sensores ativos: {selectedRegion.sensorsCount}</Text>
+              <Text style={styles.alertLine}>Status: MONITORING</Text>
+              <Text style={styles.alertLine}>Ação recomendada: manter acompanhamento preventivo da região e validar leituras dos sensores IoT.</Text>
+              <Text style={styles.alertLine}>Explicação: esta região não possui alerta ativo no momento, mas continua sendo monitorada por dados simulados de satélite e sensores IoT.</Text>
+              <TouchableOpacity style={[styles.button, { marginTop: 14 }]} onPress={() => setScreen('regions')}>
+                <Text style={styles.buttonText}>Voltar para Regiões</Text>
+              </TouchableOpacity>
+            </View>
           )}
 
           {screen === 'alert-details' && selectedAlert && (

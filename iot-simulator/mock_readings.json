@@ -1,1 +1,107 @@
-[]
+[
+  {
+    "sensor_id": 4,
+    "sensor_type": "TEMPERATURE",
+    "value": 37.73,
+    "unit": "°C",
+    "generated_at": "2026-05-28T03:31:00.696516+00:00"
+  },
+  {
+    "sensor_id": 2,
+    "sensor_type": "WATER_LEVEL",
+    "value": 26.32,
+    "unit": "%",
+    "generated_at": "2026-05-28T03:31:04.750954+00:00"
+  },
+  {
+    "sensor_id": 4,
+    "sensor_type": "TEMPERATURE",
+    "value": 26.11,
+    "unit": "°C",
+    "generated_at": "2026-05-28T03:31:27.266730+00:00"
+  },
+  {
+    "sensor_id": 2,
+    "sensor_type": "WATER_LEVEL",
+    "value": 38.67,
+    "unit": "%",
+    "generated_at": "2026-05-28T03:31:31.334049+00:00"
+  },
+  {
+    "sensor_id": 5,
+    "sensor_type": "SMOKE",
+    "value": 95.58,
+    "unit": "índice",
+    "generated_at": "2026-05-28T03:31:35.448176+00:00"
+  },
+  {
+    "sensor_id": 1,
+    "sensor_type": "RAINFALL",
+    "value": 54.07,
+    "unit": "mm",
+    "generated_at": "2026-05-28T03:31:39.558222+00:00"
+  },
+  {
+    "sensor_id": 4,
+    "sensor_type": "TEMPERATURE",
+    "value": 19.85,
+    "unit": "°C",
+    "generated_at": "2026-05-28T03:32:13.185449+00:00"
+  },
+  {
+    "sensor_id": 2,
+    "sensor_type": "WATER_LEVEL",
+    "value": 32.84,
+    "unit": "%",
+    "generated_at": "2026-05-28T03:32:17.320214+00:00"
+  },
+  {
+    "sensor_id": 5,
+    "sensor_type": "SMOKE",
+    "value": 76.9,
+    "unit": "índice",
+    "generated_at": "2026-05-28T03:32:21.420585+00:00"
+  },
+  {
+    "sensor_id": 1,
+    "sensor_type": "RAINFALL",
+    "value": 13.29,
+    "unit": "mm",
+    "generated_at": "2026-05-28T03:32:25.526011+00:00"
+  },
+  {
+    "sensor_id": 4,
+    "sensor_type": "TEMPERATURE",
+    "value": 35.15,
+    "unit": "°C",
+    "generated_at": "2026-05-28T03:33:15.466292+00:00"
+  },
+  {
+    "sensor_id": 2,
+    "sensor_type": "WATER_LEVEL",
+    "value": 39.45,
+    "unit": "%",
+    "generated_at": "2026-05-28T03:33:19.515306+00:00"
+  },
+  {
+    "sensor_id": 5,
+    "sensor_type": "SMOKE",
+    "value": 61.89,
+    "unit": "índice",
+    "generated_at": "2026-05-28T03:33:23.647582+00:00"
+  },
+  {
+    "sensor_id": 1,
+    "sensor_type": "RAINFALL",
+    "value": 36.9,
+    "unit": "mm",
+    "generated_at": "2026-05-28T03:33:27.734981+00:00"
+  },
+  {
+    "sensor_id": 4,
+    "sensor_type": "TEMPERATURE",
+    "value": 23.63,
+    "unit": "°C",
+    "generated_at": "2026-05-28T03:34:33.967493+00:00"
+  }
+]
