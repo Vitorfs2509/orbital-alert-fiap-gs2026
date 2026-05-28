@@ -17,6 +17,17 @@
    mvn spring-boot:run
    ```
 
+## Modo de desenvolvimento local com H2
+Para executar o backend localmente sem PostgreSQL, use o perfil `dev` e o banco em memória H2:
+
+```powershell
+cd backend
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+- O console H2 ficará disponível em `http://localhost:8080/h2-console`
+- A UI do Swagger continua disponível em `http://localhost:8080/swagger-ui.html`
+
 ## Endpoints
 - Auth: `POST /api/auth/register`, `POST /api/auth/login`
 - Regions: `GET/POST /api/regions`, `GET/PUT/DELETE /api/regions/{id}`
@@ -28,7 +39,8 @@
 - URL: `http://localhost:8080/swagger-ui.html`
 
 ## Configuração de banco
-A API usa PostgreSQL por padrão. Configuração em `src/main/resources/application.yml`.
+A API usa PostgreSQL por padrão. A configuração padrão está em `src/main/resources/application.yml`.
+Para desenvolvimento local, há um perfil `dev` que usa H2 em memória (`src/main/resources/application-dev.properties`).
 
 ## Práticas de segurança aplicadas
 - Senhas com hash BCrypt.
