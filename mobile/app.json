@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Orbital Alert",
+    "slug": "orbital-alert",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#070B14"
+    },
+    "assetBundlePatterns": ["**/*"]
+  }
+}
