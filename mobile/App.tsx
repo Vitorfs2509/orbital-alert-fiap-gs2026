@@ -112,7 +112,6 @@ export default function App() {
           )}
 
 
-
           {screen === 'region-details' && selectedRegion && (
             <View style={styles.alertCard}>
               <Text style={styles.sectionTitle}>Detalhes de Monitoramento</Text>
