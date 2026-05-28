@@ -1,17 +1,26 @@
 # Orbital Alert
 
-## Descrição
-O **Orbital Alert** é um projeto acadêmico da FIAP (Global Solution 2026/1) que simula monitoramento de regiões de risco com dados satelitais simulados e sensores IoT.
+## 1. Nome do projeto
+Orbital Alert
 
-## Tema e contexto
-- **Tema:** Space Economy
-- **Foco:** prevenção de enchentes, queimadas, chuvas intensas e eventos climáticos extremos.
+## 2. Descrição da solução
+Orbital Alert é um MVP acadêmico que combina dados satelitais simulados e sensores IoT para monitorar regiões de risco e gerar alertas preventivos de enchentes, queimadas e eventos climáticos extremos.
 
-## Nota acadêmica
-- O **mobile** utiliza **dados mockados** para garantir estabilidade no pitch e facilitar demonstração.
-- O módulo **IoT** utiliza **dados simulados** para representar sensores reais em ambiente acadêmico.
+## 3. Problema abordado
+O sistema busca antecipar ameaças ambientais em áreas vulneráveis, oferecendo monitoramento contínuo e geração de alertas automáticos para apoiar decisões de mitigação e resposta rápida.
 
-## Estrutura do repositório
+## 4. Conexão com Space Economy
+A solução integra informações espaciais e terrestres para promover a Space Economy, demonstrando como dados derivados de observação da Terra e IoT podem ser aplicados em proteção de populações e gestão de riscos climáticos.
+
+## 5. Tecnologias usadas
+- Backend: Java Spring Boot
+- Banco de dados local: H2 (profile `dev`)
+- Modelagem oficial de banco: PostgreSQL
+- Mobile: React Native com Expo
+- Simulador IoT: Python
+- Documentação e evidências: Markdown e imagens
+
+## 6. Estrutura de pastas
 ```text
 .
 ├── backend/
@@ -19,79 +28,70 @@ O **Orbital Alert** é um projeto acadêmico da FIAP (Global Solution 2026/1) qu
 ├── database/
 ├── iot-simulator/
 ├── docs/
+│   ├── evidencias/
+│   ├── evidencias-api/
+│   ├── evidencias-iot/
+│   ├── documento-final.md
+│   ├── plano-de-testes.md
+│   └── roteiro-pitch.md
 ├── postman/
 ├── README.md
 ├── integrantes.txt
 └── .gitignore
 ```
 
-## Integrantes
-- Yuri Monteiro Zacarioto - RM550952
-- Vitor Futida Sternik - RM98697
-- Caio Henrique Rocha da Silva - RM552308
-- Vitor Reyes Souza - RM550766
-
-## Link do vídeo pitch
-- **A definir**
-
-## Como executar o projeto
-
-### 1) Banco de dados (PostgreSQL)
-```bash
-psql -U postgres -d orbital_alert -f database/schema.sql
-psql -U postgres -d orbital_alert -f database/seed.sql
-```
-
-### 2) Backend (Spring Boot)
-```bash
+## 7. Como rodar o backend em modo dev/H2
+No terminal, execute:
+```powershell
 cd backend
-mvn spring-boot:run
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 
-Variáveis opcionais:
-- `DB_URL` (padrão: `jdbc:postgresql://localhost:5432/orbital_alert`)
-- `DB_USER` (padrão: `postgres`)
-- `DB_PASSWORD` (padrão: `postgres`)
+Este comando inicia o backend usando o perfil `dev`, que utiliza o banco em memória H2 para demonstração local.
 
-Swagger:
-- `http://localhost:8080/swagger-ui.html`
+## 8. Como acessar Swagger
+Com o backend em execução, acesse:
 
-### 3) IoT Simulator (Python)
-```bash
-cd iot-simulator
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-pip install -r requirements.txt
-python sensor_simulator.py
-```
+- `http://localhost:8080/swagger-ui/index.html`
 
-Opcional:
-```bash
-API_URL=http://localhost:8080 SIM_INTERVAL_SECONDS=3 python sensor_simulator.py
-```
-
-### 4) Mobile (Expo + React Native)
-```bash
+## 9. Como rodar o mobile
+No terminal, execute:
+```powershell
 cd mobile
 npm install
 npm run start
 ```
 
-Depois, abra no Expo Go (QR Code) ou emulador.
+Abra o app no Expo Go ou emulador conforme instruções do terminal.
 
-### 5) Postman
-1. Abra o Postman.
-2. Importe `postman/OrbitalAlert.postman_collection.json`.
-3. Execute as rotas com backend ativo em `http://localhost:8080`.
+## 10. Como rodar o simulador IoT
+No terminal, execute:
+```powershell
+cd iot-simulator
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python sensor_simulator.py
+```
 
-## Checklist de entrega
-- [x] Estrutura inicial do repositório
-- [x] Scripts SQL (`schema.sql`, `seed.sql`, `queries.sql`)
-- [x] Backend Spring Boot com endpoints principais
-- [x] Simulador IoT com fallback offline
-- [x] Protótipo mobile com 4 telas
-- [x] Coleção Postman
-- [x] Plano de testes (`docs/plano-testes.md`)
-- [x] Guia de evidências (`docs/evidencias/README.md`)
-- [x] Documento final rascunho (`docs/documento-final.md`)
-- [x] Roteiro de pitch (`docs/roteiro-pitch.md`)
+O simulador envia uma leitura demo para o backend e pode ser usado para gerar alertas através da API.
+
+## 11. Onde estão os scripts de banco
+Os scripts de banco estão na pasta `database/`:
+- `schema.sql`
+- `seed.sql`
+- `queries.sql`
+
+## 12. Onde estão as evidências e plano de testes
+- Evidências da API: `docs/evidencias-api/`
+- Evidências do IoT: `docs/evidencias-iot/`
+- Plano de testes: `docs/plano-de-testes.md`
+
+## 13. Integrantes do grupo
+- Yuri Monteiro Zacarioto - RM550952
+- Vitor Futida Sternik - RM98697
+- Caio Henrique Rocha da Silva - RM552308
+- Vitor Reyes Souza - RM550766
+
+## 14. Observação sobre bancos de dados
+A modelagem oficial do projeto utiliza PostgreSQL. O perfil `dev` do backend roda com H2 para facilitar demonstração local e testes rápidos sem dependências externas.
