@@ -1,166 +1,167 @@
 # Orbital Alert
 
 ## 1. Capa
-- **Nome do projeto:** Orbital Alert  
-- **Tema:** Global Solution 2026/1 - Space Economy  
-- **Curso:** Engenharia de Software - FIAP  
-- **Integrantes:**
-  - Yuri Monteiro Zacarioto - RM550952
-  - Vitor Futida Sternik - RM98697
-  - Caio Henrique Rocha da Silva - RM552308
-  - Vitor Reyes Souza - RM550766
+- **Nome do projeto:** Orbital Alert
+- **Tema:** Global Solution 2026/1 - Space Economy
+- **Curso:** Engenharia de Software - FIAP
+- **Entrega:** MVP acadêmico de monitoramento ambiental
 
 ---
 
-## 2. Visão geral do projeto
-O **Orbital Alert** é um MVP acadêmico que simula o monitoramento de regiões de risco por meio da combinação de dados de satélite (simulados) e leituras de sensores IoT.
-
-### Problema resolvido
-Eventos climáticos extremos como enchentes, queimadas e chuvas intensas causam impactos sociais, ambientais e econômicos. Em muitos cenários, o alerta chega tarde ou sem integração de dados.
-
-### Solução proposta
-A solução propõe um fluxo simples e funcional para:
-1. receber leituras de sensores,
-2. consolidar informações por região,
-3. gerar alertas preventivos,
-4. exibir tudo em uma interface mobile para apoio à decisão.
+## 2. Integrantes
+- Yuri Monteiro Zacarioto - RM550952
+- Vitor Futida Sternik - RM98697
+- Caio Henrique Rocha da Silva - RM552308
+- Vitor Reyes Souza - RM550766
 
 ---
 
-## 3. Conexão com Space Economy
-O projeto se conecta à **Space Economy** ao mostrar como dados de observação da Terra (simulados como dados satelitais) podem ser usados junto com IoT para monitoramento climático.
+## 3. Visão geral da solução
+Orbital Alert é um MVP acadêmico que une dados satelitais simulados e sensores IoT para monitorar regiões de risco e gerar alertas preventivos relacionados a enchentes, queimadas e eventos climáticos extremos.
 
-Essa combinação apoia:
-- monitoramento de riscos ambientais,
-- prevenção de desastres,
-- iniciativas de cidades inteligentes,
-- sustentabilidade,
-- tomada de decisão mais rápida por órgãos públicos e equipes técnicas.
+A solução demonstra um fluxo de dados integrado entre sensores, backend, banco de dados e interface de apresentação.
 
 ---
 
-## 4. Escopo do MVP
-### O que está implementado
-- Backend em Spring Boot com endpoints para autenticação, regiões, sensores, leituras e alertas.
-- Banco PostgreSQL com modelagem relacional e scripts SQL.
-- Protótipo mobile em React Native + Expo.
-- Coleção Postman para testes de API.
-- Plano de testes e estrutura de evidências.
+## 4. Problema abordado
+O projeto aborda a dificuldade de identificar rapidamente riscos ambientais em áreas vulneráveis, onde a falta de integração entre fontes de dados torna a resposta mais lenta.
 
-### O que está mockado
-- Dados exibidos no aplicativo mobile.
-
-### O que está simulado
-- Leituras de sensores IoT via script Python.
-- Uso conceitual de dados satelitais por meio de score de risco nas regiões.
-
-### Por que isso é suficiente para um MVP acadêmico
-O recorte permite demonstrar o valor da solução ponta a ponta sem complexidade excessiva, com foco em clareza técnica, viabilidade de execução e apresentação em curto tempo.
+A proposta é fornecer alertas automáticos e apoio à tomada de decisão antes que eventos críticos causem danos maiores.
 
 ---
 
-## 5. Entregáveis de banco de dados
-O modelo ER foi pensado para representar o fluxo principal do negócio: usuários monitoram regiões, regiões possuem sensores, sensores geram leituras e leituras podem gerar alertas.
+## 5. Conexão com Space Economy
+Orbital Alert está alinhado à Space Economy ao explorar o uso de dados de observação da Terra e análise geoespacial, mesmo em formato simulado.
 
-### Tabelas principais
+O conceito evidencia como informações espaciais e IoT podem gerar valor em aplicações de monitoramento ambiental e gestão de risco.
+
+---
+
+## 6. Arquitetura geral
+A arquitetura do projeto é composta por módulos integrados:
+- **Backend Spring Boot:** expõe API REST para regiões, sensores, leituras e alertas.
+- **Banco de dados PostgreSQL:** modelagem oficial para persistência de dados.
+- **Mobile React Native/Expo:** protótipo para visualização de alertas.
+- **Simulador IoT Python:** gera leituras de sensores e envia para a API.
+- **Postman e documentação:** apoio aos testes manuais e evidências.
+
+O fluxo principal consiste em:
+1. cadastro de região e sensor;
+2. envio de leituras;
+3. processamento de dados;
+4. geração de alertas;
+5. apresentação e validação.
+
+---
+
+## 7. Banco de Dados
+A modelagem oficial está disponível na pasta `database/`.
+
+### Scripts de banco
+- `database/schema.sql`
+- `database/seed.sql`
+- `database/queries.sql`
+
+### Componentes do modelo
 - `users`
 - `regions`
 - `sensors`
 - `sensor_readings`
 - `alerts`
 
-### Aspectos técnicos entregues
-- Chaves primárias (PK) em todas as tabelas.
-- Chaves estrangeiras (FK) para relacionamento entre entidades.
-- Constraints para garantir integridade de domínio.
-- `seed.sql` com dados iniciais para demonstração.
-- `queries.sql` com consultas de uso acadêmico.
+A estrutura inclui chaves primárias, estrangeiras e constraints para manter a integridade dos dados.
 
 ---
 
-## 6. Entregáveis de API
+## 8. API / Backend
 O backend foi implementado com **Java 21 + Spring Boot + Maven**.
 
-### Arquitetura utilizada
-- **Controller:** exposição dos endpoints REST.
-- **Service:** regras de negócio e fluxo de aplicação.
-- **Repository:** acesso aos dados com Spring Data JPA.
+### Principais camadas
+- **Controller:** expõe os endpoints REST.
+- **Service:** gerencia regras de negócio.
+- **Repository:** interage com o banco de dados via Spring Data JPA.
 
-### Endpoints principais
-- Auth: `POST /api/auth/register`, `POST /api/auth/login`
-- Regions: `GET/POST /api/regions`, `GET/PUT/DELETE /api/regions/{id}`
-- Sensors: `GET/POST /api/sensors`, `GET/DELETE /api/sensors/{id}`
-- Readings: `POST /api/readings`, `GET /api/readings/latest`
-- Alerts: `GET /api/alerts`, `GET /api/alerts/active`, `PUT /api/alerts/{id}/resolve`
+### Endpoints relevantes
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/regions`
+- `POST /api/regions`
+- `GET /api/sensors`
+- `POST /api/sensors`
+- `POST /api/readings`
+- `GET /api/alerts`
+- `GET /api/alerts/active`
+- `PUT /api/alerts/{id}/resolve`
 
 ### Swagger
-A documentação interativa da API pode ser acessada via Swagger em:
-- `http://localhost:8080/swagger-ui.html`
+A API pode ser acessada em:
+- `http://localhost:8080/swagger-ui/index.html`
 
 ---
 
-## 7. Entregáveis de plano de testes
-O arquivo `docs/plano-testes.md` descreve casos de teste funcionais do MVP.
+## 9. Plano de Testes
+O plano de testes está documentado em `docs/plano-testes.md`.
 
-- O plano contém **pelo menos 5 casos** (foram definidos 6).
-- Cada caso inclui: ID, cenário, entrada, resultado esperado e status.
-- **Pelo menos 3 testes** estão marcados como executados (`Aprovado`).
-- As evidências devem ser organizadas em `docs/evidencias/`.
+O documento cobre casos de teste para:
+- criação de região monitorada;
+- cadastro de sensor IoT;
+- envio de leitura de sensor;
+- geração de alerta automático;
+- resolução de alerta;
+- listagem de alertas ativos;
+- execução do simulador IoT.
 
----
-
-## 8. Entregáveis mobile
-Foi desenvolvido um protótipo em **React Native + Expo** com foco em demonstração.
-
-### Telas
-1. Login
-2. Dashboard
-3. Regions
-4. Alert Details
-
-### Dados mockados
-O app utiliza dados locais mockados para garantir estabilidade durante o pitch e independência de conectividade no momento da apresentação.
+As evidências relacionadas estão organizadas nas pastas de imagens.
 
 ---
 
-## 9. Entregáveis de segurança
-- **Hash de senha com BCrypt** no cadastro/autenticação.
-- **Validação de entrada** com DTOs e Bean Validation.
-- **Uso de JPA Repositories** para reduzir risco de SQL Injection em relação a SQL manual concatenado.
-- **Tratamento seguro de erros** via handler global e respostas padronizadas.
+## 10. Mobile
+O protótipo mobile foi construído em **React Native com Expo**.
+
+### Características
+- interface de demonstração para alertas e regiões;
+- uso de dados mockados para garantir estabilidade na apresentação;
+- foco em comunicação clara do valor do MVP.
 
 ---
 
-## 10. Entregáveis IoT
-O simulador em Python gera leituras para:
+## 11. Segurança
+O projeto considera aspectos básicos de segurança:
+- uso de **BCrypt** para hash de senha;
+- validação de entrada com DTOs;
+- Spring Data JPA para reduzir riscos de SQL Injection;
+- tratamento de erros controlado no backend.
+
+---
+
+## 12. IoT
+O simulador Python produz leituras para sensores de:
 - `TEMPERATURE`
 - `WATER_LEVEL`
 - `SMOKE`
 - `RAINFALL`
 
-### Regras de geração de alerta
-- `WATER_LEVEL >= 80` -> alerta de enchente
-- `TEMPERATURE >= 40` -> alerta de risco de incêndio
-- `SMOKE >= 70` -> alerta de fumaça/incêndio
-- `RAINFALL >= 60` -> alerta de chuva intensa
+### Regras de alerta
+- `WATER_LEVEL >= 80` => alerta de enchente
+- `TEMPERATURE >= 40` => alerta de incêndio
+- `SMOKE >= 70` => alerta de fumaça
+- `RAINFALL >= 60` => alerta de chuva intensa
 
 ### Fallback offline
-Se a API estiver indisponível, as leituras são salvas localmente em JSON para posterior reenvio.
+Se o backend estiver indisponível, as leituras são gravadas em `mock_readings.json`.
 
 ---
 
-## 11. Visão geral da arquitetura
-A solução é composta por módulos integrados:
-- **Database (PostgreSQL):** persiste entidades de negócio e histórico.
-- **Backend (Spring Boot):** centraliza regras e endpoints REST.
-- **IoT Simulator (Python):** simula sensores e envia leituras.
-- **Mobile (Expo):** apresenta dados e experiência do usuário para demonstração.
-- **Postman:** validação manual dos endpoints.
-- **Docs:** documentação técnica, plano de testes e evidências.
+## 13. Evidências
+As evidências do projeto estão disponíveis em:
+- `docs/evidencias-api/`
+- `docs/evidencias-iot/`
 
-Fluxo didático: **sensores simulados -> API -> banco/alertas -> visualização mobile + testes/evidências**.
+Elas suportam a validação dos testes realizados e demonstram o funcionamento dos fluxos principais.
 
 ---
 
-## 12. Conclusão
-O Orbital Alert é relevante por tratar prevenção de riscos climáticos com uma abordagem atual e alinhada à Space Economy. O escopo é viável para contexto acadêmico, demonstra integração entre camadas e atende aos objetivos da FIAP Global Solution com clareza, simplicidade e potencial de evolução futura.
+## 14. Conclusão
+Orbital Alert apresenta um MVP acadêmico consistente para monitoramento de riscos ambientais com suporte à Space Economy.
+
+A entrega demonstra a integração entre sensores simulados, backend, banco de dados e mobile, entregando um caso de uso válido para prevenção de desastres e tomada de decisão.
