@@ -64,6 +64,17 @@ oci_api_key*
 *.key
 
 # =========================
+# Oracle Database local (Fase 6)
+# O banco roda em container Docker, com os dados no volume
+# `orbital-alert-oracle-data`. Nada do banco entra no repositorio.
+# =========================
+*.dbf
+wallet/
+tnsnames.ora
+sqlnet.ora
+oracle-local.env
+
+# =========================
 # Logs
 # =========================
 logs/

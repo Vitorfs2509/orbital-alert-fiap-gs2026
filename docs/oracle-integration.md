@@ -1,5 +1,16 @@
 # Integração Oracle — OCI Object Storage (Fase 6)
 
+> **Status: integração de nuvem opcional/futura.**
+> Não foi possível concluir a criação da conta Oracle Cloud (erro no cadastro), então
+> **nenhum upload real para o OCI foi executado**. A integração permanece implementada
+> em código, coberta por 25 testes automatizados e **validada por `--dry-run`** — pronta
+> para uma fase futura, assim que houver uma conta disponível.
+>
+> A **evidência principal de integração Oracle do projeto** é o banco de dados real
+> descrito em **[oracle-database-integration.md](oracle-database-integration.md)**:
+> um **Oracle AI Database Free** rodando localmente em Docker, recebendo os dados
+> analíticos da camada CURATED na tabela `REGION_RISK_SUMMARY`.
+
 ## 1. Tecnologia escolhida
 
 **Oracle Cloud Infrastructure (OCI) — Object Storage.**
@@ -213,7 +224,11 @@ Arquivos planejados : 11
 OK: dry-run concluido. Nenhum dado saiu desta maquina.
 ```
 
-### 8.2 Upload real
+### 8.2 Upload real — **não executado nesta entrega**
+
+> Os comandos e a saída abaixo são **ilustrativos**: descrevem o que aconteceria com uma conta
+> OCI configurada. Nenhum deles foi executado neste projeto — não há conta Oracle Cloud e
+> nenhum arquivo saiu da máquina. O que foi realmente executado é o `--dry-run` da seção 8.1.
 
 ```powershell
 # 1) alimentar o Data Lake local
@@ -281,11 +296,14 @@ validação de configuração, mensagens de erro, resolução de namespace, envi
 
 ## 10. Evidências para o trabalho acadêmico
 
-> **Estas capturas ainda não foram feitas.** Este repositório não contém nenhum
-> screenshot do Console Oracle e **nenhum upload real foi executado** até aqui —
-> só o `--dry-run`, que não acessa a Oracle. As imagens abaixo precisam ser
-> tiradas manualmente por um integrante do grupo, com uma conta OCI real, depois
-> de rodar `python etl/sync_data_lake_to_oci.py`.
+> **Estas capturas não foram feitas e não serão exigidas nesta entrega.** A criação
+> da conta Oracle Cloud não pôde ser concluída (erro no cadastro), então este
+> repositório não contém nenhum screenshot do Console Oracle e **nenhum upload real
+> foi executado** — só o `--dry-run`, que não acessa a Oracle.
+>
+> As evidências Oracle da entrega são as do banco real em Docker, listadas em
+> [oracle-database-integration.md](oracle-database-integration.md#11-evidências-para-o-trabalho-acadêmico).
+> A tabela abaixo fica registrada como roteiro para quando houver uma conta OCI.
 
 Salvar em `docs/evidencias-oci/` com os nomes sugeridos:
 

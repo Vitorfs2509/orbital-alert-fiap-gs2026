@@ -1,0 +1,9 @@
+# Dependencia OPCIONAL: usada apenas por etl/sync_curated_to_oracle.py.
+# Nada mais no projeto precisa dela - backend, ETLs locais, simulador,
+# mobile e os testes automatizados rodam sem instalar este pacote.
+#
+#   pip install -r etl/requirements-oracle-db.txt
+#
+# Driver oficial Python da Oracle. O modo "thin" (padrao) nao exige
+# Oracle Instant Client instalado na maquina.
+oracledb>=2.0.0

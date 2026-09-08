@@ -7,6 +7,8 @@ Python 3** — nenhuma dependência externa é necessária para o pipeline local
 |---|---|---|---|
 | `raw_to_trusted.py` | `data-lake/raw/` | `data-lake/trusted/` | stdlib |
 | `trusted_to_curated.py` | `data-lake/trusted/` | `data-lake/curated/` | stdlib |
+| `sync_curated_to_oracle.py` | `data-lake/curated/` | tabela `REGION_RISK_SUMMARY` no Oracle | `oracledb` (opcional) |
+| `oracle_database.py` | — | módulo de apoio do script acima | stdlib (import do `oracledb` é tardio) |
 | `sync_data_lake_to_oci.py` | `data-lake/{raw,trusted,curated}/` | bucket OCI Object Storage | `oci` (opcional) |
 | `oci_storage.py` | — | módulo de apoio do script acima | stdlib (import do `oci` é tardio) |
 
@@ -23,7 +25,14 @@ python etl/trusted_to_curated.py
 python etl/raw_to_trusted.py
 python etl/trusted_to_curated.py
 
-# Fase 6 — o que subiria para a Oracle (não acessa a rede)
+# Fase 6 — o que seria gravado no Oracle Database (não acessa o banco)
+python etl/sync_curated_to_oracle.py --dry-run
+
+# Fase 6 — carga real no Oracle AI Database Free (container local)
+$env:ORACLE_DB_PASSWORD = "<senha do ORBITAL_ALERT>"
+python etl/sync_curated_to_oracle.py
+
+# Fase 6 — o que subiria para a nuvem OCI (não acessa a rede)
 python etl/sync_data_lake_to_oci.py --dry-run
 ```
 
@@ -74,7 +83,41 @@ A fórmula está documentada em
 > `RISK_RULES` neste script e `RULES` em `backend/.../service/RiskScoreCalculator.java`,
 > usado como fallback quando o ETL ainda não rodou.
 
-## `sync_data_lake_to_oci.py` (Fase 6 — opcional)
+## `sync_curated_to_oracle.py` (Fase 6 — Oracle AI Database Free)
+
+Grava a camada CURATED na tabela analítica **`REGION_RISK_SUMMARY`** de um
+**Oracle AI Database Free** rodando localmente em Docker:
+
+```
+LOCAL   data-lake/curated/region_risk_latest.json
+ORACLE  REGION_RISK_SUMMARY (REGION_ID, GENERATED_AT)
+```
+
+| Argumento | Padrão | Descrição |
+|---|---|---|
+| `--dry-run` | desligado | lista o que seria gravado; **não abre conexão** |
+| `--curated-dir` | `data-lake/curated` | diretório da camada CURATED |
+
+Configuração por variáveis de ambiente (`ORACLE_DB_HOST`, `ORACLE_DB_PORT`,
+`ORACLE_DB_SERVICE`, `ORACLE_DB_USER`, `ORACLE_DB_PASSWORD`). Os padrões já apontam
+para o contêiner local, então só a senha precisa ser informada. **Nenhuma senha fica
+no código nem no repositório** — e o resumo de configuração nunca a imprime.
+
+A carga é **idempotente**: o `MERGE` tem chave `(REGION_ID, GENERATED_AT)`, então
+reexecutar o mesmo snapshot atualiza a linha em vez de duplicar, enquanto uma nova
+execução do ETL vira um novo registro histórico.
+
+> **O Oracle não substitui o banco operacional.** H2/PostgreSQL continuam atendendo a
+> API, o `AlertService` e o mobile. Se o contêiner estiver desligado, nada no projeto
+> para de funcionar.
+
+Passo a passo completo (contêiner, usuário, segurança, consultas e evidências) em
+[../docs/oracle-database-integration.md](../docs/oracle-database-integration.md).
+
+## `sync_data_lake_to_oci.py` (Fase 6 — nuvem, opcional/futuro)
+
+> Não foi possível criar a conta Oracle Cloud, então **nenhum upload real foi
+> executado**. O script está implementado, testado e validado por `--dry-run`.
 
 Envia as camadas do Data Lake local para um bucket do **Oracle Cloud Infrastructure
 Object Storage**, preservando a estrutura relativa dos arquivos:
@@ -106,13 +149,20 @@ em [../docs/oracle-integration.md](../docs/oracle-integration.md).
 ## Testes
 
 ```powershell
-python etl/tests/test_oci_sync.py
-# ou
 python -m unittest discover -s etl/tests
+# ou um arquivo por vez
+python etl/tests/test_oci_sync.py
+python etl/tests/test_oracle_database.py
 ```
 
-25 testes com `unittest` da stdlib. Nenhuma chamada real ao OCI: o
-`ObjectStorageClient` é substituído por um duble.
+56 testes com `unittest` da stdlib, sem nenhuma dependência externa:
+
+- `test_oci_sync.py` (25) — o `ObjectStorageClient` é substituído por um duble;
+  nenhuma chamada real ao OCI.
+- `test_oracle_database.py` (31) — parsing do CURATED, conversão de timestamps UTC,
+  mapeamento das colunas, validação de configuração e geração dos binds do `MERGE`.
+  A conexão é substituída por um duble; **nenhum teste exige o banco de pé**. A
+  integração real é exercitada à parte, contra o contêiner local.
 
 ## Idempotência
 

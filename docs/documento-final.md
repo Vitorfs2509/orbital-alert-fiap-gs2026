@@ -50,7 +50,8 @@ A arquitetura do projeto é composta por módulos integrados:
 - **Mobile React Native/Expo:** protótipo para visualização de alertas.
 - **Simulador IoT Python:** gera leituras de sensores e envia para a API.
 - **Data Lake e ETL (Fase 5):** camadas RAW/TRUSTED/CURATED em arquivos, com score de risco por região.
-- **Oracle Cloud Infrastructure — Object Storage (Fase 6):** persistência em nuvem das três camadas do Data Lake, preservando os prefixes `raw/`, `trusted/` e `curated/`. Integração opcional e desacoplada: o filesystem local segue como ambiente de desenvolvimento, teste e fallback. Detalhes em [oracle-integration.md](oracle-integration.md).
+- **Oracle AI Database Free (Fase 6):** banco Oracle real, executado localmente em Docker pela imagem oficial `container-registry.oracle.com/database/free:latest-lite`, recebendo os dados analíticos da camada CURATED na tabela `REGION_RISK_SUMMARY` (carga idempotente via `MERGE`). O Oracle **não substitui** H2/PostgreSQL, que continuam sendo o banco operacional da API, do `AlertService` e do mobile. Detalhes em [oracle-database-integration.md](oracle-database-integration.md).
+- **Oracle Cloud Infrastructure — Object Storage (Fase 6, opcional/futuro):** persistência em nuvem das três camadas do Data Lake, preservando os prefixes `raw/`, `trusted/` e `curated/`. Implementada em código e **validada por dry-run**; não houve upload real, porque a criação da conta Oracle Cloud não pôde ser concluída (erro no cadastro). O filesystem local segue como ambiente de desenvolvimento, teste e fallback. Detalhes em [oracle-integration.md](oracle-integration.md).
 - **Postman e documentação:** apoio aos testes manuais e evidências.
 
 O fluxo principal consiste em:
