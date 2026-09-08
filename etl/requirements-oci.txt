@@ -1,0 +1,8 @@
+# Dependencia OPCIONAL: usada apenas por etl/sync_data_lake_to_oci.py.
+# Nada mais no projeto precisa dela - backend, ETLs locais, simulador,
+# mobile e os testes automatizados rodam sem instalar este pacote.
+#
+#   pip install -r etl/requirements-oci.txt
+#
+# SDK oficial do Oracle Cloud Infrastructure para Python.
+oci>=2.126.0

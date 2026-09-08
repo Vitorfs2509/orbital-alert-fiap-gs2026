@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { alerts, dashboardMetrics, regions } from './src/data/mockData';
+import { alerts as mockAlerts, dashboardMetrics, regions } from './src/data/mockData';
 import { MetricCard } from './src/components/MetricCard';
+import { DataSource, fetchAlerts, isBackendConfigured } from './src/services/api';
 import { Alert, Region, RiskLevel } from './src/types';
 import { colors } from './src/theme/colors';
 
@@ -15,7 +16,33 @@ export default function App() {
   const [email, setEmail] = useState('demo@orbitalalert.app');
   const [password, setPassword] = useState('123456');
   const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
-  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(alerts[0]);
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(mockAlerts[0]);
+
+  // Alertas: backend real quando EXPO_PUBLIC_API_BASE_URL existe, mock caso contrário.
+  const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
+  const [dataSource, setDataSource] = useState<DataSource>('MOCK');
+
+  useEffect(() => {
+    if (!isBackendConfigured) return;
+
+    let active = true;
+    fetchAlerts()
+      .then(remote => {
+        // Sem alertas no backend, o mock continua valendo para a demonstração.
+        if (!active || remote.length === 0) return;
+        setAlerts(remote);
+        setDataSource('BACKEND');
+      })
+      .catch(() => {
+        // API fora do ar: segue com o mock, sem quebrar a interface.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const activeAlerts = useMemo(() => alerts.filter(a => a.status !== 'RESOLVED').length, [alerts]);
 
   const regionById = useMemo(() => new Map(regions.map(r => [r.id, r])), []);
 
@@ -68,9 +95,12 @@ export default function App() {
           {screen === 'dashboard' && (
             <>
               <Text style={styles.sectionTitle}>Visão Geral</Text>
-              <Text style={styles.sectionText}>Dados simulados indicam risco climático em regiões monitoradas para apoiar ações preventivas.</Text>
+              <Text style={styles.sectionText}>Dados de enchente e clima indicam risco em regiões monitoradas para apoiar ações preventivas.</Text>
+              <Text style={styles.sourceLine}>
+                {dataSource === 'BACKEND' ? '🟢 Alertas do backend real (GET /api/alerts)' : '⚪ Alertas em modo demonstração (dados mockados)'}
+              </Text>
               <View style={styles.metricsRow}>
-                <MetricCard title="Alertas ativos" value={String(dashboardMetrics.activeAlerts)} highlight={colors.critical} />
+                <MetricCard title="Alertas ativos" value={String(activeAlerts)} highlight={colors.critical} />
                 <MetricCard title="Regiões" value={String(dashboardMetrics.monitoredRegions)} highlight={colors.primary} />
               </View>
               <View style={styles.metricsRow}>
@@ -149,6 +179,7 @@ const styles = StyleSheet.create({
   menu: { color: colors.textMuted, fontSize: 13 },
   sectionTitle: { color: colors.text, fontSize: 22, fontWeight: '700', marginBottom: 8 },
   sectionText: { color: colors.textMuted, marginBottom: 14, lineHeight: 20 },
+  sourceLine: { color: colors.textMuted, fontSize: 12, marginBottom: 12 },
   metricsRow: { flexDirection: 'row', gap: 10 },
   regionCard: { backgroundColor: colors.cardSoft, borderRadius: 14, borderWidth: 1, borderColor: colors.border, padding: 14, marginBottom: 10 },
   regionName: { color: colors.text, fontWeight: '700', fontSize: 16, marginBottom: 6 },

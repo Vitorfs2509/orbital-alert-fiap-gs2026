@@ -14,3 +14,17 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+# Fase 5 - Data Lake e IA generativa
+orbital:
+  datalake:
+    enabled: ${DATA_LAKE_ENABLED:true}
+    # Caminho relativo a pasta de execucao (backend/) ou absoluto via DATA_LAKE_PATH.
+    base-path: ${DATA_LAKE_PATH:../data-lake}
+  ai:
+    # mock (padrao, offline) | openai (opcional)
+    provider: ${AI_PROVIDER:mock}
+    model: ${AI_MODEL:gpt-4o-mini}
+    base-url: ${AI_BASE_URL:https://api.openai.com/v1}
+    # Nunca versione a chave: ela vem apenas da variavel de ambiente.
+    api-key: ${OPENAI_API_KEY:}

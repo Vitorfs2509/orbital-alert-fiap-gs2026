@@ -21,6 +21,12 @@ Orbital Alert é um MVP acadêmico que une dados satelitais simulados e sensores
 
 A solução demonstra um fluxo de dados integrado entre sensores, backend, banco de dados e interface de apresentação.
 
+> **Foco desta fase acadêmica: monitoramento e prevenção de enchentes.**
+> O cenário priorizado na demonstração usa os sensores `WATER_LEVEL` e `RAINFALL`, o tipo de
+> risco `FLOOD` no score do Data Lake e as evidências correspondentes. Trata-se de uma escolha
+> de caso de uso: o suporte técnico a incêndio/temperatura (`TEMPERATURE`, `SMOKE`, `HUMIDITY`)
+> permanece implementado e testado no backend, no simulador e nos ETLs.
+
 ---
 
 ## 4. Problema abordado
@@ -43,6 +49,8 @@ A arquitetura do projeto é composta por módulos integrados:
 - **Banco de dados PostgreSQL:** modelagem oficial para persistência de dados.
 - **Mobile React Native/Expo:** protótipo para visualização de alertas.
 - **Simulador IoT Python:** gera leituras de sensores e envia para a API.
+- **Data Lake e ETL (Fase 5):** camadas RAW/TRUSTED/CURATED em arquivos, com score de risco por região.
+- **Oracle Cloud Infrastructure — Object Storage (Fase 6):** persistência em nuvem das três camadas do Data Lake, preservando os prefixes `raw/`, `trusted/` e `curated/`. Integração opcional e desacoplada: o filesystem local segue como ambiente de desenvolvimento, teste e fallback. Detalhes em [oracle-integration.md](oracle-integration.md).
 - **Postman e documentação:** apoio aos testes manuais e evidências.
 
 O fluxo principal consiste em:

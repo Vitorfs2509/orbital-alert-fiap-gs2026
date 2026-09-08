@@ -1,0 +1,2 @@
+region_id,region_name,risk_score,risk_level,risk_type,readings,sensors,window_start,window_end,dominant_sensor_type,generated_at
+1,Margem Rio Tiete - Norte,100,HIGH,FLOOD,6,2,2026-09-08T11:53:14Z,2026-09-08T11:53:16Z,RAINFALL,2026-09-08T17:04:11Z

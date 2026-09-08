@@ -1,0 +1,48 @@
+[
+  {
+    "regionId": 1,
+    "regionName": "Margem Rio Tiete - Norte",
+    "riskScore": 100,
+    "riskLevel": "HIGH",
+    "riskType": "FLOOD",
+    "dominantSensorType": "RAINFALL",
+    "readings": 6,
+    "sensors": 2,
+    "windowStart": "2026-09-08T11:53:14Z",
+    "windowEnd": "2026-09-08T11:53:16Z",
+    "indicators": [
+      {
+        "sensorType": "RAINFALL",
+        "unit": "mm/h",
+        "samples": 3,
+        "avgValue": 62.53,
+        "minValue": 55.0,
+        "maxValue": 70.1,
+        "lastValue": 70.1,
+        "baseline": 0.0,
+        "threshold": 60.0,
+        "direction": "above",
+        "riskType": "FLOOD",
+        "subScore": 100,
+        "trend": "RISING"
+      },
+      {
+        "sensorType": "WATER_LEVEL",
+        "unit": "cm",
+        "samples": 3,
+        "avgValue": 84.83,
+        "minValue": 78.4,
+        "maxValue": 91.2,
+        "lastValue": 91.2,
+        "baseline": 20.0,
+        "threshold": 80.0,
+        "direction": "above",
+        "riskType": "FLOOD",
+        "subScore": 100,
+        "trend": "RISING"
+      }
+    ],
+    "ignoredSensorTypes": [],
+    "generatedAt": "2026-09-08T17:04:11Z"
+  }
+]

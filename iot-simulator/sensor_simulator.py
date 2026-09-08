@@ -16,7 +16,9 @@ import requests
 API_URL = os.getenv("API_URL", "http://localhost:8080").rstrip("/")
 READINGS_ENDPOINT = f"{API_URL}/api/readings"
 OFFLINE_FILE = Path(__file__).with_name("mock_readings.json")
-DEFAULT_PAYLOAD = {"sensorId": 1, "value": 87.5}
+# `source` identifica a origem do evento na camada RAW do Data Lake.
+DEFAULT_SOURCE = "IOT_SIMULATOR"
+DEFAULT_PAYLOAD = {"sensorId": 1, "value": 87.5, "source": DEFAULT_SOURCE}
 
 
 def save_offline(payload: dict) -> None:
@@ -66,12 +68,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--interval", type=float, default=5.0, help="Intervalo em segundos para enviar leituras em modo loop")
     parser.add_argument("--sensor-id", type=int, default=1, help="ID do sensor usado na leitura demo")
     parser.add_argument("--value", type=float, default=87.5, help="Valor enviado na leitura demo")
+    parser.add_argument("--source", default=DEFAULT_SOURCE, help="Origem registrada na camada RAW do Data Lake")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    payload = {"sensorId": args.sensor_id, "value": args.value}
+    payload = {"sensorId": args.sensor_id, "value": args.value, "source": args.source}
 
     if args.loop:
         print("Modo loop habilitado. Pressione Ctrl+C para encerrar.")

@@ -1,0 +1,26 @@
+{
+  "layer": "TRUSTED",
+  "run_id": "20260908T145327Z",
+  "started_at": "2026-09-08T14:53:27Z",
+  "files_read": 1,
+  "records_read": 6,
+  "records_valid": 6,
+  "records_rejected": 0,
+  "duplicates_technical": 0,
+  "duplicates_business": 0,
+  "rejected_by_reason": {},
+  "records_by_sensor_type": {
+    "WATER_LEVEL": 3,
+    "RAINFALL": 3
+  },
+  "records_by_region": {
+    "1": 6
+  },
+  "finished_at": "2026-09-08T14:53:28Z",
+  "acceptance_rate_pct": 100.0,
+  "outputs": {
+    "readings_jsonl": "C:/Users/vitor/Desktop/orbital-alert-fiap-gs2026/data-lake/trusted/readings.jsonl",
+    "readings_csv": "C:/Users/vitor/Desktop/orbital-alert-fiap-gs2026/data-lake/trusted/readings.csv",
+    "rejected_jsonl": "C:/Users/vitor/Desktop/orbital-alert-fiap-gs2026/data-lake/trusted/_quality/rejected_20260908T145327Z.jsonl"
+  }
+}

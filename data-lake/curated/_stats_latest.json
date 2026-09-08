@@ -1,0 +1,50 @@
+{
+  "layer": "CURATED",
+  "generated_at": "2026-09-08T17:04:11Z",
+  "source": "C:/Users/vitor/Desktop/orbital-alert-fiap-gs2026/data-lake/trusted/readings.jsonl",
+  "events_read": 6,
+  "events_without_region": 0,
+  "regions_processed": 1,
+  "regions_by_level": {
+    "HIGH": 1
+  },
+  "scoring_rules": {
+    "thresholds": {
+      "WATER_LEVEL": {
+        "baseline": 20.0,
+        "limit": 80.0,
+        "direction": "above",
+        "risk_type": "FLOOD"
+      },
+      "RAINFALL": {
+        "baseline": 0.0,
+        "limit": 60.0,
+        "direction": "above",
+        "risk_type": "FLOOD"
+      },
+      "TEMPERATURE": {
+        "baseline": 25.0,
+        "limit": 40.0,
+        "direction": "above",
+        "risk_type": "FIRE"
+      },
+      "SMOKE": {
+        "baseline": 10.0,
+        "limit": 70.0,
+        "direction": "above",
+        "risk_type": "FIRE"
+      },
+      "HUMIDITY": {
+        "baseline": 60.0,
+        "limit": 30.0,
+        "direction": "below",
+        "risk_type": "FIRE"
+      }
+    },
+    "weight_max": 0.7,
+    "weight_mean": 0.3,
+    "trend_bonus": 10,
+    "level_high_min": 70,
+    "level_medium_min": 40
+  }
+}

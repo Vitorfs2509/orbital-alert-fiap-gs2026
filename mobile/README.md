@@ -52,13 +52,43 @@ Depois:
    - Status
    - Explicação do motivo do alerta
 
-## Dados mockados
-O protótipo utiliza apenas dados locais mockados em `src/data/mockData.ts` para:
-- regiões
-- alertas
-- métricas de dashboard
+## Fonte de dados: mock (padrão) ou backend real
 
-Isso mantém o app leve, previsível e ideal para demonstração em vídeo sem depender do backend online.
+O app funciona nos dois modos e escolhe sozinho, sem alterar código.
+
+| | Modo mock (padrão) | Modo backend |
+|---|---|---|
+| Quando | `EXPO_PUBLIC_API_BASE_URL` ausente **ou** API fora do ar | variável definida e API respondendo |
+| Alertas | `src/data/mockData.ts` | `GET /api/alerts` |
+| Regiões e métricas | mock | mock |
+| Indicador na tela | ⚪ "Alertas em modo demonstração (dados mockados)" | 🟢 "Alertas do backend real (GET /api/alerts)" |
+
+### Como apontar para o backend real
+
+```bash
+cd mobile
+cp .env.example .env      # PowerShell: Copy-Item .env.example .env
+```
+
+```env
+EXPO_PUBLIC_API_BASE_URL=http://SEU_IP_LOCAL:8080
+```
+
+Reinicie o Expo depois de mudar o `.env` (`npm run start`).
+
+> No celular com Expo Go, `localhost` aponta para o próprio aparelho. Use o IP da máquina que
+> roda o backend na mesma rede Wi-Fi. Emulador Android: `http://10.0.2.2:8080`.
+
+### Por que o fallback existe
+
+A chamada tem timeout de 4 s e qualquer falha (variável ausente, API fora do ar, resposta
+inesperada, lista vazia) mantém os dados mockados. A demonstração offline — em vídeo ou no
+pitch de 3 minutos — nunca depende do backend estar no ar.
+
+A implementação fica em `src/services/api.ts` (~80 linhas). Regiões e métricas seguem mockadas
+de propósito: o `RegionDto` do backend não expõe `satelliteRiskScore` nem `sensorsCount`, e
+buscar esses números exigiria mudar o contrato da API e as telas — fora do escopo mínimo
+desta fase.
 
 ## Por que dados mockados são aceitáveis nesta entrega FIAP
 Para o MVP acadêmico da Global Solution, dados mockados permitem:

@@ -49,6 +49,21 @@ Thumbs.db
 !.env.example
 
 # =========================
+# Oracle Cloud Infrastructure (Fase 6)
+# Credenciais NUNCA sao versionadas: chave privada da API, fingerprint,
+# tenancy/user OCID e o config pessoal ficam apenas na maquina do dev.
+# =========================
+.oci/
+oci_config
+oci_api_key*
+*_oci_api_key*
+*.pem
+*.ppk
+*.p12
+*.pfx
+*.key
+
+# =========================
 # Logs
 # =========================
 logs/
