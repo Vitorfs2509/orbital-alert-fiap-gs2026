@@ -89,7 +89,46 @@ npm install
 npx expo start
 ```
 
-## 12. O que gravar no vídeo pitch
+## 12. Como rodar o Oracle AI Database Free (Fase 6)
+Opcional — o projeto roda inteiro sem ele. Serve para demonstrar a integração Oracle real.
+
+Pré-requisito: Docker Desktop aberto. Se `docker` não estiver no PATH:
+```powershell
+$env:PATH = "$env:LOCALAPPDATA\Programs\DockerDesktop\resources\bin;$env:PATH"
+```
+
+Primeira vez (baixa a imagem e cria o banco — leva alguns minutos):
+```powershell
+docker pull container-registry.oracle.com/database/free:latest-lite
+docker volume create orbital-alert-oracle-data
+docker run -d --name orbital-alert-oracle -p 1521:1521 `
+  -e ORACLE_PWD="<senha do SYSTEM>" `
+  -v orbital-alert-oracle-data:/opt/oracle/oradata `
+  container-registry.oracle.com/database/free:latest-lite
+
+docker logs -f orbital-alert-oracle   # espere "DATABASE IS READY TO USE!"
+```
+
+Criar o usuário da aplicação (uma única vez):
+```powershell
+Get-Content database/oracle-setup.sql | docker exec -i orbital-alert-oracle `
+  sqlplus -S "system/<senha do SYSTEM>@localhost:1521/FREEPDB1"
+```
+
+Sincronizar a camada CURATED e conferir:
+```powershell
+pip install -r etl/requirements-oracle-db.txt
+$env:ORACLE_DB_PASSWORD = "<senha do ORBITAL_ALERT>"
+python etl/sync_curated_to_oracle.py
+
+docker exec -it orbital-alert-oracle sqlplus "ORBITAL_ALERT/<senha>@localhost:1521/FREEPDB1"
+-- SELECT * FROM REGION_RISK_SUMMARY;
+```
+
+Nas próximas vezes basta `docker start orbital-alert-oracle`.
+Guia completo: [docs/oracle-database-integration.md](docs/oracle-database-integration.md).
+
+## 13. O que gravar no vídeo pitch
 Mostre no vídeo:
 - problema que o projeto resolve
 - solução proposta pelo Orbital Alert
@@ -99,8 +138,9 @@ Mostre no vídeo:
 - execuçãodo simulador IoT
 - alerta gerado a partir da leitura
 - conexão com Space Economy
+- integração Oracle real: contêiner de pé e `SELECT * FROM REGION_RISK_SUMMARY`
 
-## 13. O que ainda falta
+## 14. O que ainda falta
 - gravar o vídeo pitch
 - colocar o link do vídeo em `integrantes.txt`
 - gerar o PDF final do projeto

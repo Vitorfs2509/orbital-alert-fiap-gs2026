@@ -29,26 +29,37 @@ flowchart TD
     AI --> REC["GET /api/recommendations/<br/>regions/{regionId}"]
     REC --> DEC["Decisão humana<br/>(a IA não executa ações)"]
 
-    RAW --> SYNC["etl/sync_data_lake_to_oci.py<br/>(Fase 6, opcional)"]
-    TRUSTED --> SYNC
-    CURATED --> SYNC
-    SYNC --> OCI["<b>Oracle Cloud Infrastructure (OCI)</b><br/>Object Storage<br/>raw/ · trusted/ · curated/"]
+    CURATED --> SYNCDB["etl/sync_curated_to_oracle.py<br/>(Fase 6, MERGE idempotente)"]
+    SYNCDB --> ORADB[("<b>Oracle AI Database Free</b><br/>Docker · FREEPDB1<br/>REGION_RISK_SUMMARY")]
+    ORADB --> ANA["Dados analíticos de risco<br/>consultas SQL"]
+
+    RAW -.-> SYNC["etl/sync_data_lake_to_oci.py<br/>(opcional/futuro · dry-run)"]
+    TRUSTED -.-> SYNC
+    CURATED -.-> SYNC
+    SYNC -.-> OCI["OCI Object Storage<br/>nuvem — sem upload real"]
 
     classDef bronze fill:#f5e6d3,stroke:#a9773f,color:#4a3416
     classDef silver fill:#e8eaed,stroke:#7a828c,color:#2b3038
     classDef gold fill:#fbf0c4,stroke:#b39418,color:#4a3d00
     classDef oracle fill:#fde8e6,stroke:#c74634,color:#5a1a12
+    classDef future fill:#f2f2f2,stroke:#9aa0a6,color:#4a4a4a,stroke-dasharray:5 4
     class RAW bronze
     class TRUSTED silver
     class CURATED gold
-    class SYNC,OCI oracle
+    class SYNCDB,ORADB,ANA oracle
+    class SYNC,OCI future
 ```
 
-A partir da **Fase 6**, as três camadas também podem ser persistidas no
-**OCI Object Storage**, preservando os mesmos prefixes `raw/`, `trusted/` e
-`curated/`. O filesystem local continua sendo a fonte de desenvolvimento, teste
-e fallback — a sincronização é opcional e explícita. Detalhes em
-[oracle-integration.md](oracle-integration.md).
+A partir da **Fase 6**, a camada CURATED também é persistida em um
+**Oracle AI Database Free** rodando localmente em Docker, na tabela analítica
+`REGION_RISK_SUMMARY`. O Oracle **não** substitui o banco operacional (H2 /
+PostgreSQL): ele recebe apenas o resultado analítico da ponta do Data Lake, em
+paralelo. Detalhes em
+[oracle-database-integration.md](oracle-database-integration.md).
+
+O envio das três camadas para o **OCI Object Storage** permanece implementado em
+código e validado por `--dry-run`, como **integração de nuvem opcional/futura** —
+não houve upload real. Detalhes em [oracle-integration.md](oracle-integration.md).
 
 ## 3. As três camadas
 

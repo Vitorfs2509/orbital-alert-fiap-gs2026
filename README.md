@@ -1,109 +1,265 @@
 # Orbital Alert
 
-## 1. Nome do projeto
-Orbital Alert
+Monitoramento preventivo de **enchentes** com sensores IoT, Data Lake, score de risco,
+IA de apoio à decisão e persistência analítica em **Oracle AI Database Free**.
 
-## 2. Descrição da solução
-Orbital Alert é um MVP acadêmico que combina dados satelitais simulados e sensores IoT para monitorar regiões de risco e gerar alertas preventivos de enchentes, queimadas e eventos climáticos extremos.
+> **MVP acadêmico — FIAP, Global Solution 2026.** Não é um sistema em produção: não há deploy
+> público, os dados de sensores vêm de um simulador e o objetivo é demonstrar a arquitetura
+> ponta a ponta de forma reproduzível na máquina de qualquer avaliador.
 
-> **Foco desta fase acadêmica: monitoramento e prevenção de enchentes.**
-> O cenário demonstrado (sensores `WATER_LEVEL` e `RAINFALL`, score de risco `FLOOD`, pitch e
-> evidências) prioriza enchentes por ser o evento de maior recorrência e impacto nas regiões
-> estudadas. **Isso é uma escolha de caso de uso, não uma remoção funcional:** o suporte técnico
-> a incêndio/temperatura (`TEMPERATURE`, `SMOKE`, `HUMIDITY`) continua íntegro no backend, no
-> simulador, nos ETLs e no modelo de risco.
+---
 
-## 3. Problema abordado
-O sistema busca antecipar ameaças ambientais em áreas vulneráveis, oferecendo monitoramento contínuo e geração de alertas automáticos para apoiar decisões de mitigação e resposta rápida. Na fase atual, o caso de uso demonstrado é a **enchente**: nível de água e volume de chuva acima dos limiares disparam alerta automático e alimentam o score de risco por região.
+## Visão geral
 
-## 4. Conexão com Space Economy
-A solução integra informações espaciais e terrestres para promover a Space Economy, demonstrando como dados derivados de observação da Terra e IoT podem ser aplicados em proteção de populações e gestão de riscos climáticos.
+O Orbital Alert observa regiões vulneráveis por meio de sensores (nível de água, chuva,
+temperatura, fumaça, umidade), guarda cada leitura recebida, calcula um **score de risco por
+região** e gera **alertas** que chegam ao aplicativo mobile.
 
-## 5. Tecnologias usadas
-- Backend: Java Spring Boot
-- Banco de dados local: H2 (profile `dev`)
-- Modelagem oficial de banco: PostgreSQL
-- Mobile: React Native com Expo
-- Simulador IoT: Python
-- Data Lake e ETL (Fase 5): arquivos JSON/JSONL/CSV e scripts Python (biblioteca padrão)
-- IA generativa (Fase 5): modo MOCK offline, com integração opcional a LLM externo
-- Cloud (Fase 6): **Oracle Cloud Infrastructure — Object Storage**, via SDK oficial `oci` (opcional)
-- Documentação e evidências: Markdown e imagens
+O sistema tem dois caminhos que rodam em paralelo e não dependem um do outro:
 
-## 6. Estrutura de pastas
+| Caminho | O que faz | Se parar… |
+|---|---|---|
+| **Operacional** | Recebe a leitura, grava no banco, aplica as regras de limiar e emite o alerta | O produto para — é o coração do sistema |
+| **Analítico** | Guarda o histórico em Data Lake, calcula o score de risco, alimenta a IA e o Oracle | O produto continua funcionando normalmente |
+
+Essa separação é proposital: o alerta que protege pessoas nunca pode depender de um ETL, de uma
+IA ou de um banco analítico estar no ar.
+
+## Problema priorizado: enchentes
+
+Enchentes e alagamentos são o evento climático de maior recorrência e impacto nas regiões
+estudadas. Por isso **esta fase demonstra o caso de uso de enchente**: os sensores
+`WATER_LEVEL` (nível do rio) e `RAINFALL` (volume de chuva) alimentam o risco do tipo `FLOOD`,
+e as evidências do repositório seguem esse cenário.
+
+**Isso é uma escolha de caso de uso, não uma limitação técnica.** O suporte a incêndio
+(`TEMPERATURE`, `SMOKE`, `HUMIDITY` → risco `FIRE`) continua íntegro no backend, no simulador,
+nos ETLs e no modelo de risco — basta cadastrar sensores desse tipo.
+
+## Proposta de valor
+
+1. **Antecipação, não constatação.** O alerta é disparado quando a leitura cruza o limiar, e o
+   score de risco considera a **tendência** — uma região com chuva subindo pontua mais do que
+   uma região estável no mesmo valor.
+2. **Decisão apoiada, nunca automatizada.** A IA generativa produz uma recomendação em
+   linguagem clara para a defesa civil. Ela **não** aciona sirene, não evacua ninguém e não
+   altera nenhum dado: todos os endpoints de recomendação são somente leitura. A decisão
+   crítica continua sendo humana.
+3. **Histórico auditável.** Toda leitura fica gravada exatamente como chegou (camada RAW,
+   imutável). Se uma regra de qualidade mudar, o histórico inteiro pode ser reprocessado.
+4. **Reproduzível.** Backend, simulador, ETLs, testes e mobile rodam offline. O banco Oracle
+   sobe com um `docker run`.
+
+## Arquitetura
+
+```mermaid
+flowchart TD
+    S["Sensores IoT<br/>(iot-simulator, Python)"] --> API["Spring Boot API<br/>POST /api/readings"]
+
+    API --> DB[("Banco operacional<br/>H2 (dev) / PostgreSQL")]
+    DB --> ALERT["AlertService<br/>regras de limiar"]
+    ALERT --> MOB["Aplicativo mobile<br/>Expo / React Native<br/>GET /api/alerts"]
+
+    API --> RAW["<b>RAW / Bronze</b><br/>data-lake/raw/AAAA/MM/DD/<br/>evento como chegou"]
+    RAW --> ETL1["etl/raw_to_trusted.py<br/>validação · deduplicação"]
+    ETL1 --> TRUSTED["<b>TRUSTED / Silver</b><br/>readings.jsonl + readings.csv"]
+    TRUSTED --> ETL2["etl/trusted_to_curated.py<br/>agregação por região"]
+    ETL2 --> CURATED["<b>CURATED / Gold</b><br/>region_risk_latest.json<br/>score · nível · tipo de risco"]
+
+    CURATED --> AI["IA generativa<br/>GET /api/recommendations"]
+    AI --> DEC["Decisão humana<br/>(a IA não executa ações)"]
+
+    CURATED --> SYNCDB["etl/sync_curated_to_oracle.py<br/>MERGE idempotente"]
+    SYNCDB --> ORADB[("<b>Oracle AI Database Free</b><br/>Docker · FREEPDB1<br/>REGION_RISK_SUMMARY")]
+    ORADB --> ANA["Consultas analíticas de risco<br/>SQL"]
+
+    CURATED -.-> SYNCOCI["etl/sync_data_lake_to_oci.py<br/>(opcional/futuro · dry-run)"]
+    SYNCOCI -.-> OCI["OCI Object Storage<br/>nuvem — sem upload real"]
+
+    classDef bronze fill:#f5e6d3,stroke:#a9773f,color:#4a3416
+    classDef silver fill:#e8eaed,stroke:#7a828c,color:#2b3038
+    classDef gold fill:#fbf0c4,stroke:#b39418,color:#4a3d00
+    classDef oracle fill:#fde8e6,stroke:#c74634,color:#5a1a12
+    classDef future fill:#f2f2f2,stroke:#9aa0a6,color:#4a4a4a,stroke-dasharray:5 4
+    class RAW bronze
+    class TRUSTED silver
+    class CURATED gold
+    class SYNCDB,ORADB,ANA oracle
+    class SYNCOCI,OCI future
+```
+
+Em texto:
+
+```text
+Sensores IoT / simulador Python
+        ↓
+Spring Boot API
+        ├──→ H2/PostgreSQL → AlertService → Alert → Mobile
+        │
+        └──→ RAW → TRUSTED → CURATED → Risk Score → recomendação IA
+                                   └──→ Oracle AI Database Free
+```
+
+## Fluxo em tempo real
+
+1. O sensor (ou o simulador) envia `POST /api/readings`.
+2. A API grava a leitura no **banco operacional** (H2 em `dev`, PostgreSQL na modelagem oficial).
+3. O **`AlertService`** compara o valor com o limiar do tipo de sensor. Se cruzar, cria um
+   `Alert` com nível de risco.
+4. O aplicativo mobile consome `GET /api/alerts` e mostra os alertas ativos.
+5. **Em paralelo e sem bloquear a resposta**, a mesma leitura é anexada à camada RAW do
+   Data Lake.
+
+O passo 5 é assíncrono ao resultado: se o Data Lake falhar, o `POST /api/readings` responde
+normalmente e o alerta é gerado do mesmo jeito.
+
+## Data Lake: RAW / TRUSTED / CURATED
+
+| Camada | Conteúdo | Garantias |
+|---|---|---|
+| **RAW** (Bronze) | Evento exatamente como chegou, JSON Lines particionado por data | Imutável, append-only. Pode ter duplicata e valor absurdo |
+| **TRUSTED** (Silver) | Eventos validados, deduplicados e padronizados + relatório de qualidade | Tipos corretos, rejeitados registrados em `_quality/` |
+| **CURATED** (Gold) | Um agregado por região: score, nível e tipo de risco, com os indicadores por sensor | Pronto para consumo analítico e para a IA |
+
+Reprocessar é seguro: os ETLs **reescrevem** as saídas em vez de acrescentar, e o RAW nunca é
+modificado.
+
+Detalhes em [docs/data-lake-architecture.md](docs/data-lake-architecture.md) e
+[docs/data-maintenance.md](docs/data-maintenance.md).
+
+## Risk Score e recomendação
+
+O score de cada região (0–100) combina o **pior indicador** e a **média** dos sensores, com
+bônus para tendência de alta:
+
+- peso 0,7 para o maior sub-score, 0,3 para a média;
+- `+10` quando a série está subindo (`RISING`);
+- nível: `HIGH` ≥ 70, `MEDIUM` ≥ 40, senão `LOW`.
+
+Sobre a camada CURATED, a **IA generativa** monta uma recomendação textual para a defesa civil:
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/api/recommendations/regions/{regionId}` | Recomendação para uma região |
+| `GET` | `/api/recommendations` | Recomendação para todas as regiões |
+| `GET` | `/api/recommendations/regions/{regionId}/prompt` | Prompt exato enviado à IA (auditoria) |
+
+Os três são **somente leitura**. O modo padrão é `mock`: determinístico, offline e sem API key.
+A integração com LLM externo é opcional e cai automaticamente no mock se a chave faltar ou a
+chamada falhar. Exemplo real de prompt e resposta em
+[docs/ai-generative-example.md](docs/ai-generative-example.md).
+
+## Integração Oracle AI Database Free
+
+Esta é a **integração Oracle real da Fase 6**: um banco Oracle de verdade, rodando localmente em
+Docker, recebendo os dados analíticos da ponta do Data Lake.
+
+```text
+CURATED
+  ↓
+etl/sync_curated_to_oracle.py
+  ↓
+Oracle AI Database 26ai Free em Docker
+  ↓
+FREEPDB1
+  ↓
+REGION_RISK_SUMMARY
+```
+
+**O Oracle não substitui o banco operacional.** H2/PostgreSQL continuam atendendo a API, o
+`AlertService` e o mobile. O Oracle é uma **persistência analítica complementar** da camada
+CURATED — se o contêiner estiver desligado, nada no projeto para de funcionar.
+
+- **Imagem oficial:** `container-registry.oracle.com/database/free:latest-lite`
+- **Versão validada:** Oracle AI Database 26ai Free Release 23.26.3.0.0
+- **Driver:** `oracledb` (oficial da Oracle, modo *thin* — dispensa Instant Client)
+- **Tabela:** `REGION_RISK_SUMMARY`, chave primária `(REGION_ID, GENERATED_AT)`
+- **Usuário da aplicação:** `ORBITAL_ALERT`, com apenas `CREATE SESSION` e `CREATE TABLE`
+  (a aplicação nunca usa `SYSTEM`)
+
+### Caso real validado neste repositório
+
+| Campo | Valor |
+|---|---|
+| Região | Margem Rio Tiete - Norte |
+| Risk Score | **100** |
+| Risk Level | **HIGH** |
+| Risk Type | **FLOOD** |
+| Dominant Sensor | RAINFALL |
+| Registros sincronizados | **1/1** |
+
+A carga usa `MERGE` com chave `(REGION_ID, GENERATED_AT)`: executar o mesmo snapshot de novo
+**atualiza a linha em vez de duplicar** (verificado — a tabela permaneceu com 1 registro após a
+segunda execução), enquanto uma nova rodada do ETL gera um novo `generatedAt` e vira um novo
+registro histórico.
+
+Passo a passo completo em
+[docs/oracle-database-integration.md](docs/oracle-database-integration.md).
+
+## Estrutura do repositório
+
 ```text
 .
-├── backend/
-├── mobile/
-├── database/
-├── iot-simulator/
+├── backend/                # API Spring Boot (Java 21)
+├── mobile/                 # App Expo / React Native
+├── iot-simulator/          # Simulador de sensores (Python)
+├── database/               # Scripts SQL
+│   ├── schema.sql
+│   ├── seed.sql
+│   ├── queries.sql
+│   └── oracle-setup.sql          # Fase 6: usuário e tablespace do Oracle local
 ├── data-lake/              # Fase 5: RAW / TRUSTED / CURATED / samples
-│   ├── raw/
-│   ├── trusted/
-│   ├── curated/
-│   └── samples/
-├── etl/                    # Fase 5: scripts de ETL em Python
+├── etl/                    # Fase 5 e 6: scripts Python
 │   ├── raw_to_trusted.py
 │   ├── trusted_to_curated.py
-│   ├── oci_storage.py            # Fase 6: integração OCI Object Storage
-│   ├── sync_data_lake_to_oci.py  # Fase 6: sincronização do Data Lake
-│   ├── requirements-oci.txt      # Fase 6: dependência opcional (SDK oci)
-│   └── tests/
+│   ├── oracle_database.py            # Fase 6: integração Oracle AI Database Free
+│   ├── sync_curated_to_oracle.py     # Fase 6: CURATED → Oracle (MERGE idempotente)
+│   ├── requirements-oracle-db.txt    # Fase 6: dependência opcional (driver oracledb)
+│   ├── oci_storage.py                # Fase 6: integração OCI Object Storage
+│   ├── sync_data_lake_to_oci.py      # Fase 6: sincronização do Data Lake (dry-run)
+│   ├── requirements-oci.txt          # Fase 6: dependência opcional (SDK oci)
+│   └── tests/                        # 56 testes, sem dependência externa
 ├── docs/
-│   ├── evidencias/
-│   ├── evidencias-api/
-│   ├── evidencias-iot/
+│   ├── evidencias-api/               # Prints do Swagger
+│   ├── evidencias-iot/               # Prints do simulador
+│   ├── evidencias-oracle-db/         # Prints da integração Oracle
+│   ├── oracle-database-integration.md
 │   ├── oracle-integration.md
 │   ├── data-lake-architecture.md
 │   ├── ingestion-flow.md
 │   ├── data-maintenance.md
 │   ├── ai-generative-example.md
 │   ├── documento-final.md
-│   ├── plano-de-testes.md
-│   └── roteiro-pitch.md
-├── postman/
-├── README.md
-├── integrantes.txt
-├── .env.example            # Fase 6: modelo de variáveis (sem segredos)
+│   └── plano-de-testes.md
+├── postman/                # Coleção da API
+├── COMO_RODAR.md           # Guia rápido passo a passo
+├── .env.example            # Modelo de variáveis (sem segredos)
 └── .gitignore
 ```
 
-## 7. Como rodar o backend em modo dev/H2
-No terminal, execute:
+## Como executar localmente
+
+Pré-requisitos: **Java 21**, **Python 3.10+**, **Node 18+**, e **Docker Desktop** apenas para a
+parte Oracle.
+
+> No Windows, confirme que `JAVA_HOME` aponta para o JDK 21. O `mvnw.cmd` **retorna código de
+> saída 0 mesmo quando falha** por `JAVA_HOME` ausente — sempre confira o texto do resultado,
+> não só o exit code.
+
+### Backend
+
 ```powershell
 cd backend
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 
-Este comando inicia o backend usando o perfil `dev`, que utiliza o banco em memória H2 para demonstração local.
+Swagger: <http://localhost:8080/swagger-ui/index.html>
 
-## 8. Como acessar Swagger
-Com o backend em execução, acesse:
+O perfil `dev` usa H2 em memória — sem instalar banco nenhum. A modelagem oficial
+(`database/schema.sql`) é PostgreSQL.
 
-- `http://localhost:8080/swagger-ui/index.html`
+### Simulador IoT
 
-## 9. Como rodar o mobile
-No terminal, execute:
-```powershell
-cd mobile
-npm install
-npm run start
-```
-
-Abra o app no Expo Go ou emulador conforme instruções do terminal.
-
-Por padrão o app roda com **dados mockados**, sem depender do backend. Para consumir os alertas
-reais da API, crie `mobile/.env` a partir de [mobile/.env.example](mobile/.env.example):
-
-```env
-EXPO_PUBLIC_API_BASE_URL=http://SEU_IP_LOCAL:8080
-```
-
-Com a variável definida, o app busca `GET /api/alerts`. Se a API estiver fora do ar, ele volta
-sozinho para o mock — a demonstração offline nunca quebra.
-
-## 10. Como rodar o simulador IoT
-No terminal, execute:
 ```powershell
 cd iot-simulator
 python -m venv .venv
@@ -112,162 +268,225 @@ pip install -r requirements.txt
 python sensor_simulator.py
 ```
 
-O simulador envia uma leitura demo para o backend e pode ser usado para gerar alertas através da API.
+Cadastre região e sensor pelo Swagger antes (payloads prontos em
+[COMO_RODAR.md](COMO_RODAR.md)).
 
-## 11. Onde estão os scripts de banco
-Os scripts de banco estão na pasta `database/`:
-- `schema.sql`
-- `seed.sql`
-- `queries.sql`
-
-## 11.1. Fase 5 — Data Lake, ETL e IA generativa
-
-A Fase 5 acrescenta uma camada analítica **em paralelo** ao sistema operacional. A API, o banco,
-os alertas e o aplicativo mobile continuam funcionando exatamente como antes.
-
-```text
-Sensores IoT → Spring Boot API → banco operacional → alertas → mobile
-                      ↓
-                 Data Lake RAW → ETL → TRUSTED → ETL → CURATED → IA generativa → recomendação
-```
-
-### Demonstração completa (do zero)
+### ETLs
 
 ```powershell
-# 1) Backend no ar (perfil dev/H2)
-cd backend
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
-
-# 2) Em outro terminal, na raiz do repositório: cadastre região e sensor pelo Swagger
-#    (payloads em COMO_RODAR.md) e envie uma leitura
-python iot-simulator/sensor_simulator.py --sensor-id 1 --value 91.2
-
-# 3) O evento bruto aparece na camada RAW, particionado por data
-Get-Content data-lake/raw/2026/09/08/readings-2026-09-08.jsonl
-
-# 4) ETL: RAW → TRUSTED → CURATED
+# Fluxo real, com eventos gravados pela API
 python etl/raw_to_trusted.py
 python etl/trusted_to_curated.py
 
-# 5) Recomendação da IA a partir da camada CURATED
-curl http://localhost:8080/api/recommendations/regions/1
-```
-
-Para demonstrar sem depender do backend, use os dados de exemplo:
-
-```powershell
+# Demonstração sem backend, com os dados de exemplo
 python etl/raw_to_trusted.py --raw-dir data-lake/samples
 python etl/trusted_to_curated.py
 ```
 
-### Novos endpoints
+### Oracle em Docker
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `GET` | `/api/recommendations/regions/{regionId}` | Recomendação de IA para uma região |
-| `GET` | `/api/recommendations` | Recomendação para todas as regiões |
-| `GET` | `/api/recommendations/regions/{regionId}/prompt` | Prompt exato enviado à IA (auditoria) |
+Se `docker` não estiver no PATH (instalação por usuário do Docker Desktop):
 
-Todos são somente leitura: a IA é **apoio à decisão** e nunca executa ações.
+```powershell
+$env:PATH = "$env:LOCALAPPDATA\Programs\DockerDesktop\resources\bin;$env:PATH"
+```
 
-### Configuração (nenhuma chave no código)
+Primeira vez:
 
-| Propriedade | Variável de ambiente | Padrão |
-|---|---|---|
-| `orbital.datalake.base-path` | `DATA_LAKE_PATH` | `../data-lake` |
-| `orbital.datalake.enabled` | `DATA_LAKE_ENABLED` | `true` |
-| `orbital.ai.provider` | `AI_PROVIDER` | `mock` |
-| `orbital.ai.api-key` | `OPENAI_API_KEY` | *(vazio)* |
+```powershell
+docker pull container-registry.oracle.com/database/free:latest-lite
+docker volume create orbital-alert-oracle-data
 
-O modo `mock` é o padrão, funciona offline e sem API key. A integração com LLM externo é
-opcional e degrada automaticamente para o mock em caso de falha ou chave ausente.
+docker run -d --name orbital-alert-oracle -p 1521:1521 `
+  -e ORACLE_PWD="<senha do SYSTEM>" `
+  -v orbital-alert-oracle-data:/opt/oracle/oradata `
+  container-registry.oracle.com/database/free:latest-lite
 
-### Documentação da Fase 5
+docker logs -f orbital-alert-oracle    # espere "DATABASE IS READY TO USE!"
+```
 
-- [docs/data-lake-architecture.md](docs/data-lake-architecture.md) — camadas e modelo de risco
-- [docs/ingestion-flow.md](docs/ingestion-flow.md) — fluxo de ingestão ponta a ponta
-- [docs/data-maintenance.md](docs/data-maintenance.md) — qualidade, duplicidade, rastreabilidade
-- [docs/ai-generative-example.md](docs/ai-generative-example.md) — prompt e recomendação
-- [etl/README.md](etl/README.md) — uso dos scripts de ETL
+Criar o usuário da aplicação (uma única vez — o script pede a senha de forma oculta):
 
-## 11.2. Fase 6 — Integração Oracle (OCI Object Storage)
+```powershell
+Get-Content database/oracle-setup.sql | docker exec -i orbital-alert-oracle `
+  sqlplus -S "system/<senha do SYSTEM>@localhost:1521/FREEPDB1"
+```
 
-A Fase 6 acrescenta a persistência em nuvem do Data Lake usando **Oracle Cloud Infrastructure —
-Object Storage**. O funcionamento local **não muda**: o filesystem continua sendo a fonte de
-desenvolvimento, teste e fallback; a Oracle recebe uma cópia das camadas.
+Nas próximas vezes basta `docker start orbital-alert-oracle`.
+
+### Sincronização CURATED → Oracle
+
+```powershell
+pip install -r etl/requirements-oracle-db.txt
+
+python etl/sync_curated_to_oracle.py --dry-run      # não abre conexão
+
+$env:ORACLE_DB_PASSWORD = "<senha do ORBITAL_ALERT>"
+python etl/sync_curated_to_oracle.py                # carga real, idempotente
+```
+
+Saída esperada:
 
 ```text
-Sensores IoT → Spring Boot API → banco operacional → AlertService → alertas → mobile
-                      ↓
-                 RAW local → ETL → TRUSTED local → ETL → CURATED local → recomendação
-                      ↓
-             sincronização (etl/sync_data_lake_to_oci.py)
-                      ↓
-      Oracle Cloud Infrastructure (OCI) · Object Storage
-             raw/…   trusted/…   curated/…
+[ORACLE] Regiao 1 | HIGH | FLOOD | score=100 -> OK
+Registros gravados  : 1/1
+Linhas na tabela    : 1
 ```
 
-Os prefixes no bucket espelham o layout local, sem tradução:
+Provar os dados no banco:
 
-```
-LOCAL  data-lake/raw/2026/09/08/readings-2026-09-08.jsonl
-OCI    raw/2026/09/08/readings-2026-09-08.jsonl
+```powershell
+docker exec -it orbital-alert-oracle sqlplus "ORBITAL_ALERT/<senha>@localhost:1521/FREEPDB1"
 ```
 
-### Ver o que seria enviado (sem conta Oracle, sem internet)
+```sql
+SELECT sys_context('USERENV','CON_NAME') AS container_name, USER AS db_user FROM dual;
+SELECT COUNT(*) FROM REGION_RISK_SUMMARY;
+SELECT * FROM REGION_RISK_SUMMARY;
+```
+
+### Mobile
+
+```powershell
+cd mobile
+npm install
+npm run start
+```
+
+Abra no Expo Go ou emulador. Por padrão o app roda com **dados mockados**, sem depender do
+backend. Para consumir a API real, crie `mobile/.env` a partir de
+[mobile/.env.example](mobile/.env.example):
+
+```env
+EXPO_PUBLIC_API_BASE_URL=http://SEU_IP_LOCAL:8080
+```
+
+Se a API estiver fora do ar, o app volta sozinho para o mock — a demonstração offline nunca
+quebra.
+
+## Testes
+
+```powershell
+# Backend (Java 21 + JAVA_HOME configurado)
+cd backend
+.\mvnw.cmd clean compile
+$env:SPRING_PROFILES_ACTIVE = "dev"; .\mvnw.cmd test
+
+# ETLs e integrações Oracle — 56 testes, sem exigir banco nem conta Oracle
+python -m unittest discover -s etl/tests
+
+# Dry-runs (não acessam banco nem rede)
+python etl/sync_curated_to_oracle.py --dry-run
+python etl/sync_data_lake_to_oci.py --dry-run
+
+# Mobile
+cd mobile; npx tsc --noEmit
+```
+
+Os 56 testes de `etl/tests/` usam apenas a biblioteca padrão do Python. Nenhum deles abre
+conexão real: o cliente OCI e a conexão Oracle são substituídos por dublês, e há testes
+específicos garantindo que o dry-run não conecta e que **a senha nunca aparece na saída**.
+
+Plano de testes em [docs/plano-de-testes.md](docs/plano-de-testes.md).
+
+## Evidências
+
+| Pasta | Conteúdo |
+|---|---|
+| [docs/evidencias-api/](docs/evidencias-api/) | Prints do Swagger: regiões, sensores, leituras e alertas |
+| [docs/evidencias-iot/](docs/evidencias-iot/) | Terminal do simulador e alerta gerado a partir da leitura |
+| [docs/evidencias-oracle-db/](docs/evidencias-oracle-db/) | Integração Oracle (Fase 6) |
+
+Os três prints da integração Oracle comprovam:
+
+1. `01-docker-container-running.png` — contêiner `orbital-alert-oracle` em execução no Docker
+   Desktop, com o log `DATABASE IS READY TO USE!`
+2. `02-sqlplus-freepdb1-region-risk-summary.png` — SQL\*Plus conectado em `FREEPDB1` como
+   `ORBITAL_ALERT`, com `SELECT * FROM REGION_RISK_SUMMARY` mostrando o registro real
+3. `03-sync-curated-to-oracle.png` — sincronização CURATED → Oracle com
+   `[ORACLE] Regiao 1 | HIGH | FLOOD | score=100 -> OK`
+
+> A documentação acadêmica final (documento em PDF, roteiro de pitch e link do vídeo) é
+> produzida separadamente. Caso seja anexada ao repositório, o lugar dela é `docs/` —
+> [docs/documento-final.md](docs/documento-final.md) e `docs/Roteiro-pitch.md` já são os pontos
+> de entrada dessa parte.
+
+## Segurança
+
+- **Nenhuma credencial no repositório.** Sem senha, chave privada, fingerprint, OCID ou arquivo
+  `.env` real versionado. O `.gitignore` bloqueia `.env`, `*.pem`, `*.key`, `.oci/`, wallets e
+  arquivos de dados do Oracle.
+- **Tudo por variável de ambiente.** Conexão Oracle (`ORACLE_DB_*`), OCI (`OCI_*`) e chave de IA
+  (`OPENAI_API_KEY`) vêm do ambiente. Modelo com placeholders em [.env.example](.env.example).
+- **A senha nunca é impressa.** Os scripts mostram `password: (definida)`; há teste automatizado
+  garantindo isso.
+- **Privilégio mínimo no banco.** A aplicação nunca usa `SYSTEM` — conecta como `ORBITAL_ALERT`,
+  com apenas `CREATE SESSION` e `CREATE TABLE`, em tablespace própria.
+- **SQL sempre com bind variables.** O `MERGE` usa parâmetros nomeados, sem concatenar strings.
+- **Escopo local.** O banco Oracle publica a porta 1521 apenas em `localhost`; as senhas usadas
+  na demonstração são de desenvolvimento e não valem em nenhum outro ambiente.
+
+## Evolução futura / OCI Object Storage
+
+O envio das três camadas do Data Lake para o **OCI Object Storage** está **implementado em
+código, coberto por testes e validado em `--dry-run`**.
+
+> **Não houve upload real para a nuvem.** A criação da conta Oracle Cloud não pôde ser concluída
+> (erro no cadastro), então esta integração permanece como **evolução cloud opcional/futura**,
+> pronta para uso assim que houver uma conta disponível.
 
 ```powershell
 python etl/sync_data_lake_to_oci.py --dry-run
 python etl/sync_data_lake_to_oci.py --layer curated --dry-run
 ```
 
-### Upload real
+Os prefixes no bucket espelhariam o layout local, sem tradução:
 
-```powershell
-pip install -r etl/requirements-oci.txt   # dependência opcional
-$env:OCI_BUCKET_NAME = "orbital-alert-datalake"
-python etl/sync_data_lake_to_oci.py
+```text
+LOCAL  data-lake/raw/2026/09/08/readings-2026-09-08.jsonl
+OCI    raw/2026/09/08/readings-2026-09-08.jsonl
 ```
 
-### Configuração (nenhuma credencial no código nem no Git)
+Outras evoluções naturais: orquestração dos ETLs por agendador, alerta push no mobile,
+particionamento da tabela analítica por data e sensores reais no lugar do simulador.
 
-| Variável | Obrigatória | Padrão |
-|---|---|---|
-| `OCI_BUCKET_NAME` | **sim** | — |
-| `OCI_NAMESPACE` | não | resolvido pelo SDK |
-| `OCI_CONFIG_FILE` | não | `~/.oci/config` |
-| `OCI_PROFILE` | não | `DEFAULT` |
-| `OCI_REGION` | não | região do profile |
+Detalhes em [docs/oracle-integration.md](docs/oracle-integration.md).
 
-Modelo em [.env.example](.env.example). Chave privada, fingerprint e OCIDs ficam apenas em
-`~/.oci/config`, fora do repositório — o `.gitignore` bloqueia `*.pem`, `*.key`, `.oci/` e afins.
+## Limitações acadêmicas
 
-> **A integração Oracle é opcional.** `mvnw test`, os ETLs, o backend em perfil dev, o simulador
-> e o app mobile continuam funcionando sem internet, sem conta Oracle e sem o pacote `oci`.
+- **Sem deploy público.** Tudo roda localmente; não há URL de produção.
+- **Sensores simulados.** As leituras vêm do `iot-simulator`, não de hardware real.
+- **Um caso de uso demonstrado.** As evidências cobrem enchente; incêndio está implementado mas
+  não demonstrado.
+- **Volume pequeno.** O Data Lake tem dezenas de KB — suficiente para provar a arquitetura, não
+  para avaliar desempenho em escala.
+- **IA em modo mock por padrão.** A recomendação é determinística e offline salvo se uma chave
+  de LLM for configurada.
+- **Suíte de testes do backend enxuta.** O backend tem 1 teste de contexto Spring; a cobertura
+  automatizada mais densa está nos ETLs e nas integrações Oracle (56 testes).
+- **Sem upload real para o OCI**, conforme explicado acima.
 
-### Testes da integração
+## Tecnologias
 
-```powershell
-python etl/tests/test_oci_sync.py
-```
+| Camada | Tecnologia |
+|---|---|
+| Backend | Java 21, Spring Boot, Spring Data JPA, Spring Security, Springdoc OpenAPI |
+| Banco operacional | H2 (perfil `dev`) · PostgreSQL (modelagem oficial) |
+| Banco analítico | **Oracle AI Database 26ai Free** em Docker, driver oficial `oracledb` |
+| Data Lake / ETL | Python 3 (apenas biblioteca padrão), JSON / JSONL / CSV |
+| IA generativa | Modo `mock` offline determinístico + LLM externo opcional |
+| Mobile | React Native com Expo, TypeScript |
+| Simulador IoT | Python 3 |
+| Nuvem (futuro) | OCI Object Storage, SDK oficial `oci` |
+| Testes | JUnit (backend), `unittest` da stdlib (ETLs), `tsc --noEmit` (mobile) |
 
-### Documentação da Fase 6
+## Autores / FIAP
 
-- [docs/oracle-integration.md](docs/oracle-integration.md) — tecnologia, motivo da escolha,
-  arquitetura, segurança, comandos e quais screenshots tirar no Console Oracle
+Global Solution 2026 — FIAP.
 
-## 12. Onde estão as evidências e plano de testes
-- Evidências da API: `docs/evidencias-api/`
-- Evidências do IoT: `docs/evidencias-iot/`
-- Evidências do Oracle Console: `docs/evidencias-oci/` — **pendente**, capturas manuais listadas
-  em [docs/oracle-integration.md](docs/oracle-integration.md#10-evidências-para-o-trabalho-acadêmico)
-- Plano de testes: `docs/plano-de-testes.md`
-
-## 13. Integrantes do grupo
-- Yuri Monteiro Zacarioto - RM550952
-- Vitor Futida Sternik - RM98697
-- Caio Henrique Rocha da Silva - RM552308
-- Vitor Reyes Souza - RM550766
-
-## 14. Observação sobre bancos de dados
-A modelagem oficial do projeto utiliza PostgreSQL. O perfil `dev` do backend roda com H2 para facilitar demonstração local e testes rápidos sem dependências externas.
+| Integrante | RM |
+|---|---|
+| Yuri Monteiro Zacarioto | RM550952 |
+| Vitor Futida Sternik | RM98697 |
+| Caio Henrique Rocha da Silva | RM552308 |
+| Vitor Reyes Souza | RM550766 |
