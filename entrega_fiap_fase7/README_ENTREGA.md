@@ -1,14 +1,24 @@
 # Orbital Alert · AgroSmart Fase 7
 
-**Etapas 1 e 2 — Auditoria e plataforma integrada concluídas em 24/11/2026.** Os documentos de auditoria registram o estado da base. O guia e as evidências da Etapa 2 registram a nova execução integrada.
+MVP acadêmico integrado e validado localmente em 24/11/2026. A demonstração executa sensores simulados, API Spring Boot, PostgreSQL, Data Lake e dashboard Expo web. O pacote inclui evidências reais do cenário e da execução do GitHub Actions, com os achados de auditoria explícitos.
 
-| Documento | Conteúdo |
+- [Como rodar no Windows em dois comandos](COMO_RODAR.md)
+- [Relatório técnico final em PDF](RELATORIO_TECNICO_FASE7.pdf)
+- [Checklist para submissão](CHECKLIST_FINAL.md)
+- [Progresso e checkpoints](../PROGRESSO.md)
+
+| Pasta | Conteúdo principal |
 |---|---|
-| [Auditoria](AUDITORIA_ETAPA_1.md) | Inventário técnico, estado das integrações, resultados e evidências reaproveitáveis |
-| [Matriz de requisitos](MATRIZ_REQUISITOS.md) | Situação inicial, ação, prioridade e critério de comprovação por requisito |
-| [Estratégia de implementação](ESTRATEGIA_TECNICA.md) | Decisões propostas, critérios da próxima etapa e arquivos previstos |
-| [Verificações do ambiente](BASELINE_ETAPA_1.md) | Comandos e resultados atuais, incluindo limites e falhas de ambiente |
-| [Guia da plataforma integrada](02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md) | Subida, demonstração, jobs, desligamento e perfil Oracle |
-| [Resultados da Etapa 2](02_Execucao_Plataforma/RESULTADOS.md) | Ambiente, evidências da PoC e validação do PostgreSQL, navegador e Oracle |
+| [01 Arquitetura](01_Arquitetura/ARQUITETURA.md) | Componentes, dados, diagrama Mermaid, SVG e PNG |
+| [02 Execução](02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md) | Compose, PoC, volumes e Oracle opcional |
+| [03 DevSecOps](03_DevSecOps/DEVSECOPS.md) | Proteção da API, cobertura, qualidade, auditoria das dependências e pipeline |
+| [04 Monitoramento](04_Monitoramento/MONITORAMENTO.md) | Actuator, status agregado, logs e ETL periódico |
+| [05 Mineração](05_Mineracao_Processos/ANALISE.md) | Event log, variantes, gráfico, tempos e limites |
+| [06 Pitch](06_Pitch/APRESENTACAO.md) | PowerPoint de sete slides com capturas do MVP |
+| [07 Vídeos](07_Videos/LINKS_DOS_VIDEOS.md) | [Roteiro técnico](07_Videos/VIDEO_TECNICO.md), [roteiro pitch](07_Videos/VIDEO_PITCH.md) e campos para URLs |
+| [08 Evidências](08_Evidencias/INDICE.md) | Catálogo, capturas e execução final |
+| [09 Código](09_Codigo/REFERENCIAS.md) | Referências na árvore do projeto e scripts |
 
-Base: `23b139d40daab2cdfe8e2e0b5587452f6dfe7085`, confirmada pelo `git fetch origin main` em 24/11/2026. Branch local: `entrega/fase7-mvp-final`. Os artefatos da Fase 6 permanecem no worktree original e no ZIP já entregue.
+O [inventário da Fase 6](AUDITORIA_ETAPA_1.md), a [matriz original](MATRIZ_REQUISITOS.md), o [planejamento](ESTRATEGIA_TECNICA.md) e o [baseline](BASELINE_ETAPA_1.md) registram a auditoria. A [execução final aa88ffa21691](08_Evidencias/execucao-final/demo.json) passou 13 verificações. O Actions rodou e publicou evidências. A falha global por verificações de segurança está detalhada em DevSecOps.
+
+O arquivo `MANIFESTO_FASE7.json`, na raiz do ZIP, lista o commit e os hashes SHA‑256. A reconstrução do pacote a partir de um clone está em [empacotamento](09_Codigo/EMPACOTAMENTO.md).

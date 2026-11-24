@@ -73,7 +73,7 @@ Depois de salvar no banco e avaliar o alerta, o `ReadingService` tenta gravar o 
 dataLake.writeRawEvent(new RawEventDto(UUID.randomUUID().toString(), s.getId(),
     s.getRegion().getId(), s.getType().name(), req.value(), s.getUnit(),
     sr.getMeasuredAt(), now, req.source() == null || req.source().isBlank() ? "API" : req.source(),
-    sr.getId()));
+    sr.getId(), trace.caseId()));
 ```
 
 Garantias de segurança do fluxo:

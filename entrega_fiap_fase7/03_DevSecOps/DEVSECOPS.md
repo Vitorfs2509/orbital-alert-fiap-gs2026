@@ -19,3 +19,14 @@ O script `scripts/configurar.ps1` cria valores aleatórios se os campos estivere
 Resultados e relatórios locais ficam em [evidências](evidencias/). A [execução remota 45422251550](https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550) passou Maven, Python, exportação web, build dos containers e smoke integrado. O npm audit e a etapa Trivy falharam, por isso o resultado global foi **failure**. Os quatro jobs publicaram artefatos. [Resultado e etapas por job](evidencias/github-actions.json).
 
 A primeira execução remota foi rejeitada antes dos jobs por erro de sintaxe YAML. O comando multilinha foi corrigido e o workflow efetivamente executou no segundo checkpoint. [Registro inicial](evidencias/github-run-inicial.json).
+
+## Trivy local nas imagens do cenário final
+
+| Imagem | HIGH | CRITICAL |
+|---|---:|---:|
+| Backend Java | 7 | 7 |
+| Frontend Nginx | 77 | 8 |
+| Python | 101 | 2 |
+| PostgreSQL | 141 | 4 |
+
+Os números são ocorrências reportadas por alvo do scanner. Um identificador pode aparecer em mais de um alvo. A [listagem local com IDs, versões e correções anunciadas](evidencias/trivy-local.json) inclui pacotes de base e bibliotecas como Jackson, Tomcat e o driver PostgreSQL. O npm ainda registra a dependência transitiva `tar` como crítica. O scanner recomenda uma atualização principal do Expo para esse conjunto de dependências. Para publicar além do ambiente local, priorizar novos builds com imagens base e dependências atualizadas, testar compatibilidade com Expo e reexecutar as auditorias. Nenhum scanner foi silenciado para alterar o resultado.
