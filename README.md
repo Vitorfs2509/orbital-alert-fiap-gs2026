@@ -11,7 +11,7 @@ IA de apoio à decisão e persistência analítica em **Oracle AI Database Free*
 
 ## Visão geral
 
-**Fase 7:** consulte o [guia do Compose](entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md) para iniciar PostgreSQL, backend Java 21 e Expo web, executar o cenário do sensor ao dashboard e usar Oracle opcional.
+**Fase 7:** consulte o [guia Windows em dois comandos](entrega_fiap_fase7/COMO_RODAR.md) para iniciar PostgreSQL, backend Java 21 e Expo web e executar o cenário do sensor ao dashboard. O [índice da entrega](entrega_fiap_fase7/README_ENTREGA.md) reúne relatório, evidências e demais materiais.
 
 O Orbital Alert observa regiões vulneráveis por meio de sensores (nível de água, chuva,
 temperatura, fumaça, umidade), guarda cada leitura recebida, calcula um **score de risco por

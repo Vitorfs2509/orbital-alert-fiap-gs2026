@@ -1,6 +1,6 @@
 # COMO RODAR
 
-Para a Fase 7, comece pelo [guia da plataforma integrada com Docker Compose](entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md). Os passos abaixo continuam úteis para executar componentes individualmente com H2 e para consultar o procedimento Oracle da Fase 6.
+Para a Fase 7, comece pelo [guia Windows em dois comandos](entrega_fiap_fase7/COMO_RODAR.md). Os passos históricos abaixo descrevem a execução individual da Fase 6. Na Fase 7, a API exige credenciais para operações de escrita. Os scripts do Compose configuram e usam essas credenciais automaticamente.
 
 ## 1. Contexto rápido do projeto
 Orbital Alert é um MVP acadêmico que simula o uso de dados satelitais e sensores IoT para monitorar regiões de risco e gerar alertas preventivos de enchentes, queimadas e eventos climáticos extremos.

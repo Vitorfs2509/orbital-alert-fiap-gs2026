@@ -3,10 +3,8 @@
 Pré-requisitos: Docker Desktop com engine Linux em execução, Docker Compose v2 ou posterior, PowerShell e acesso aos registries/dependências para o primeiro build. Os containers fornecem Java 21, Node, Python e PostgreSQL. Rode os comandos na raiz do repositório da Fase 7.
 
 ```powershell
-Copy-Item .env.example .env  # somente se .env ainda não existir
-# Preencha POSTGRES_PASSWORD no arquivo .env local e salve.
 .\scripts\subir.ps1
-.\scripts\demonstrar.ps1 -Resultado .\demo-fase7.json
+.\scripts\demonstrar.ps1 -Mineracao -Resultado .\demo-fase7.json
 ```
 
 Abra **http://127.0.0.1:8080/** (ou a porta mostrada pelo script) e clique em **Abrir painel**. Antes da demonstração, um volume novo apresenta listas vazias. Depois, use **Atualizar dados**, abra a região **AgroSmart · Demo …** e verifique alerta, última leitura, Risk Score IoT, indicadores e recomendação consultiva. O botão de recomendação faz uma chamada separada. Com `AI_PROVIDER=mock`, o texto é determinístico e o painel exibe `MOCK`.
@@ -19,7 +17,7 @@ Invoke-RestMethod http://127.0.0.1:8080/api/risk
 .\scripts\encerrar.ps1
 ```
 
-O encerramento preserva os volumes. Ao subir novamente, banco, alertas e Lake continuam disponíveis. `ORBITAL_WEB_PORT` altera a porta local. É possível passar `-EnvFile` aos três scripts para usar um arquivo de configuração local separado. Para isolar ensaios, use um `COMPOSE_PROJECT_NAME` próprio no arquivo, além de uma porta livre. O banco e o backend ficam na rede interna do projeto. O único endereço publicado pelo Compose padrão é o frontend em loopback. A API continua pública através do proxy local nesta fase acadêmica. A Etapa 3 prevê autenticação e autorização.
+O primeiro comando cria `.env` local e gera as credenciais. O encerramento preserva os volumes. Ao subir novamente, banco, alertas e Lake continuam disponíveis. `ORBITAL_WEB_PORT` altera a porta local. É possível passar `-EnvFile` aos três scripts para usar um arquivo de configuração local separado. Para isolar ensaios, use um `COMPOSE_PROJECT_NAME` próprio no arquivo, além de uma porta livre. O banco e o backend ficam na rede interna do projeto. O único endereço publicado pelo Compose padrão é o frontend em loopback. As escritas exigem credenciais de serviço distintas; as consultas do painel permanecem locais e públicas.
 
 ## O que o cenário comprova
 
@@ -44,7 +42,7 @@ docker compose build simulator
 docker compose run --rm -T simulator python iot-simulator/sensor_simulator.py --sensor-id <ID_EXISTENTE> --value 95
 ```
 
-O comando padrão de `etl` reprocessa sem inserir leituras. Execute um job por vez. Agendamento, trava de execução e monitoramento detalhado fazem parte da Etapa 4. O fallback offline do simulador usa `IOT_OFFLINE_FILE` no caminho temporário do container. Uma falha retorna código diferente de zero e o arquivo temporário não é uma fila de reenvio.
+O comando padrão de `etl` reprocessa sem inserir leituras. O agendador e os jobs manuais compartilham a [trava de execução](../04_Monitoramento/MONITORAMENTO.md). O fallback offline do simulador usa `IOT_OFFLINE_FILE` no caminho temporário do container. Uma falha retorna código diferente de zero e o arquivo temporário não é uma fila de reenvio.
 
 ## Oracle opcional
 

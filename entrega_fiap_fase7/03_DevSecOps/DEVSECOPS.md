@@ -16,4 +16,6 @@ O script `scripts/configurar.ps1` cria valores aleatórios se os campos estivere
 - O backend passou para Spring Boot 3.5.16 e Springdoc 2.8.17, ainda em Java 21. Requests foi atualizado para 2.34.2. Os relatórios de dependências ficam separados da observação por inspeção do código.
 - Um status de scanner indica o que a base e a configuração daquela execução encontraram. A falta de relatório ou erro de acesso à base de vulnerabilidades não equivale a aprovação.
 
-Resultados e relatórios locais ficam em [evidências](evidencias/). O relatório final registra o resultado remoto observado e os achados ainda abertos.
+Resultados e relatórios locais ficam em [evidências](evidencias/). A [execução remota 45422251550](https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550) passou Maven, Python, exportação web, build dos containers e smoke integrado. O npm audit e a etapa Trivy falharam, por isso o resultado global foi **failure**. Os quatro jobs publicaram artefatos. [Resultado e etapas por job](evidencias/github-actions.json).
+
+A primeira execução remota foi rejeitada antes dos jobs por erro de sintaxe YAML. O comando multilinha foi corrigido e o workflow efetivamente executou no segundo checkpoint. [Registro inicial](evidencias/github-run-inicial.json).
