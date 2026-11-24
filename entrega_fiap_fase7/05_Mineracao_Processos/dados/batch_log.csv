@@ -1,0 +1,3 @@
+﻿case_id,event_id,activity,timestamp,resource,status,reading_id,sensor_id,region_id,batch_id,alert_id,source,duration_ms
+,dc03dd2b-9145-4af9-9de2-a11b0e4330b3,BATCH_STARTED,2026-11-24T15:11:51.057219+00:00,python-etl,RUNNING,,,,81942a9b-d755-4290-98d2-d7e44250bd3b,,,
+,b965d2cd-44d1-4ee7-8d20-219220962c26,BATCH_FINISHED,2026-11-24T15:11:51.291966+00:00,python-etl,SUCCESS,,,,81942a9b-d755-4290-98d2-d7e44250bd3b,,,234.743

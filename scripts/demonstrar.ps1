@@ -3,7 +3,8 @@ param(
     [string]$EnvFile,
     [string]$Resultado,
     [switch]$Oracle,
-    [switch]$SemRecomendacao
+    [switch]$SemRecomendacao,
+    [switch]$Mineracao
 )
 
 $ErrorActionPreference = 'Stop'
@@ -13,6 +14,7 @@ $composeArgs = @()
 if ($EnvFile) { $composeArgs += @('--env-file', $EnvFile) }
 $demoArgs = @()
 if ($SemRecomendacao) { $demoArgs += '--skip-recommendation' }
+if ($Mineracao) { $demoArgs += '--process-sample' }
 
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {

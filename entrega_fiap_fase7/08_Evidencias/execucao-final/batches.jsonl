@@ -1,0 +1,2 @@
+{"event_id": "dc03dd2b-9145-4af9-9de2-a11b0e4330b3", "activity": "BATCH_STARTED", "status": "RUNNING", "batch_id": "81942a9b-d755-4290-98d2-d7e44250bd3b", "timestamp": "2026-11-24T15:11:51.057219+00:00", "resource": "python-etl"}
+{"event_id": "b965d2cd-44d1-4ee7-8d20-219220962c26", "activity": "BATCH_FINISHED", "status": "SUCCESS", "batch_id": "81942a9b-d755-4290-98d2-d7e44250bd3b", "timestamp": "2026-11-24T15:11:51.291966+00:00", "resource": "python-etl", "duration_ms": 234.743}

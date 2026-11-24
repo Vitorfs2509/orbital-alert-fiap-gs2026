@@ -1,0 +1,155 @@
+{
+  "runId": "aa88ffa21691",
+  "caseCount": 3,
+  "eventCount": 15,
+  "batchEventCount": 2,
+  "cases": [
+    {
+      "caseId": "871b5ad1-ccd0-48a3-b39c-5d3939e20eee",
+      "activities": [
+        "READING_RECEIVED",
+        "READING_PERSISTED",
+        "RISK_EVALUATED",
+        "RAW_STORED",
+        "TRUSTED_INCLUDED",
+        "CURATED_PUBLISHED"
+      ],
+      "endStatus": "SUCCESS",
+      "elapsedMs": 818.784
+    },
+    {
+      "caseId": "e70d4696-3408-4fcc-931a-cea5fad268b6",
+      "activities": [
+        "READING_RECEIVED",
+        "READING_PERSISTED",
+        "RISK_EVALUATED",
+        "ALERT_GENERATED",
+        "RAW_STORED",
+        "TRUSTED_INCLUDED",
+        "CURATED_PUBLISHED"
+      ],
+      "endStatus": "SUCCESS",
+      "elapsedMs": 476.453
+    },
+    {
+      "caseId": "fd8ebd14-d9ee-45c4-9eff-f8271c49a6e7",
+      "activities": [
+        "READING_RECEIVED",
+        "READING_REJECTED"
+      ],
+      "endStatus": "FAILED",
+      "elapsedMs": 2.53
+    }
+  ],
+  "variants": [
+    {
+      "path": [
+        "READING_RECEIVED",
+        "READING_PERSISTED",
+        "RISK_EVALUATED",
+        "RAW_STORED",
+        "TRUSTED_INCLUDED",
+        "CURATED_PUBLISHED"
+      ],
+      "frequency": 1
+    },
+    {
+      "path": [
+        "READING_RECEIVED",
+        "READING_PERSISTED",
+        "RISK_EVALUATED",
+        "ALERT_GENERATED",
+        "RAW_STORED",
+        "TRUSTED_INCLUDED",
+        "CURATED_PUBLISHED"
+      ],
+      "frequency": 1
+    },
+    {
+      "path": [
+        "READING_RECEIVED",
+        "READING_REJECTED"
+      ],
+      "frequency": 1
+    }
+  ],
+  "transitions": [
+    {
+      "from": "READING_RECEIVED",
+      "to": "READING_PERSISTED",
+      "observations": 2,
+      "medianMs": 7.035,
+      "observedMs": [
+        8.886,
+        5.185
+      ]
+    },
+    {
+      "from": "READING_PERSISTED",
+      "to": "RISK_EVALUATED",
+      "observations": 2,
+      "medianMs": 1.973,
+      "observedMs": [
+        0.409,
+        3.536
+      ]
+    },
+    {
+      "from": "RISK_EVALUATED",
+      "to": "RAW_STORED",
+      "observations": 1,
+      "medianMs": 3.743,
+      "observedMs": [
+        3.743
+      ]
+    },
+    {
+      "from": "RAW_STORED",
+      "to": "TRUSTED_INCLUDED",
+      "observations": 2,
+      "medianMs": 534.587,
+      "observedMs": [
+        703.921,
+        365.252
+      ]
+    },
+    {
+      "from": "TRUSTED_INCLUDED",
+      "to": "CURATED_PUBLISHED",
+      "observations": 2,
+      "medianMs": 101.819,
+      "observedMs": [
+        101.825,
+        101.813
+      ]
+    },
+    {
+      "from": "RISK_EVALUATED",
+      "to": "ALERT_GENERATED",
+      "observations": 1,
+      "medianMs": 0.348,
+      "observedMs": [
+        0.348
+      ]
+    },
+    {
+      "from": "ALERT_GENERATED",
+      "to": "RAW_STORED",
+      "observations": 1,
+      "medianMs": 0.319,
+      "observedMs": [
+        0.319
+      ]
+    },
+    {
+      "from": "READING_RECEIVED",
+      "to": "READING_REJECTED",
+      "observations": 1,
+      "medianMs": 2.53,
+      "observedMs": [
+        2.53
+      ]
+    }
+  ],
+  "methods": "Primeiro lote com CURATED por caso; tempos UTC de parede; eventos de lote separados."
+}

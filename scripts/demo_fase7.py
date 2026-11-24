@@ -65,7 +65,7 @@ def json_lines(path):
                 yield json.loads(line)
 
 
-def scenario(base, browser_base, lake, skip_recommendation):
+def scenario(base, browser_base, lake, skip_recommendation, process_sample=False):
     run_id = uuid4().hex[:12]
     checks = []
 
@@ -101,6 +101,16 @@ def scenario(base, browser_base, lake, skip_recommendation):
     check(latest_reading()["id"] == critical["id"], "Nova leitura substituiu a anterior como mais recente")
     alerts = active_alerts()
     check(len(alerts) == 1 and alerts[0]["severity"] == "HIGH", "Limiar de chuva criou um alerta HIGH na região")
+
+    controlled_error = None
+    if process_sample:
+        error_source = source + ":ERROR"
+        rejected = requests.post(base.rstrip("/") + "/api/readings",
+                                 json={"sensorId": -1, "value": 95, "source": error_source},
+                                 headers={"Authorization": "Bearer " + os.environ["ORBITAL_INGEST_TOKEN"]},
+                                 timeout=15)
+        check(rejected.status_code == 404, "Sensor inexistente gerou recusa HTTP 404")
+        controlled_error = {"source": error_source, "sensorId": -1, "httpStatus": rejected.status_code}
 
     raw = [event for path in (lake / "raw").rglob("*.jsonl")
            for event in json_lines(path) if event.get("source") == source]
@@ -144,6 +154,7 @@ def scenario(base, browser_base, lake, skip_recommendation):
         "inputs": "leituras IoT simuladas enviadas pelo simulador por HTTP",
         "region": region, "sensor": sensor, "readings": [normal, critical], "alert": alerts[0],
         "raw": raw, "trusted": trusted, "risk": risk, "recommendation": recommendation, "checks": checks,
+        "controlledError": controlled_error,
     }
 
 
@@ -151,6 +162,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--etl-only", action="store_true", help="Reprocessar as camadas sem inserir dados simulados")
     parser.add_argument("--skip-recommendation", action="store_true", help="Não chamar o provedor de recomendações")
+    parser.add_argument("--process-sample", action="store_true", help="Incluir um sensor inexistente para mineração")
     args = parser.parse_args()
     base = os.environ.get("API_URL", "http://localhost:8080")
     browser_base = os.environ.get("BROWSER_API_URL", base)
@@ -158,7 +170,7 @@ def main():
     if args.etl_only:
         etl(base, lake)
     else:
-        result = scenario(base, browser_base, lake, args.skip_recommendation)
+        result = scenario(base, browser_base, lake, args.skip_recommendation, args.process_sample)
         print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

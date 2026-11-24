@@ -1,0 +1,357 @@
+{
+  "run": {
+    "id": 45422251550,
+    "head_sha": "3a0a4445d96a3fe20f4952838e90bf0f655f8138",
+    "status": "completed",
+    "conclusion": "failure",
+    "html_url": "https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550"
+  },
+  "jobs": [
+    {
+      "name": "python",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550/job/138544639163",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-24T15:09:45Z",
+          "completed_at": "2026-11-24T15:09:46Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-24T15:09:46Z",
+          "completed_at": "2026-11-24T15:09:46Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-24T15:09:46Z",
+          "completed_at": "2026-11-24T15:09:46Z"
+        },
+        {
+          "name": "Testes e análise estática",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-24T15:09:46Z",
+          "completed_at": "2026-11-24T15:09:51Z"
+        },
+        {
+          "name": "Dependências Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-24T15:09:51Z",
+          "completed_at": "2026-11-24T15:10:08Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-24T15:10:08Z",
+          "completed_at": "2026-11-24T15:10:09Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-24T15:10:09Z",
+          "completed_at": "2026-11-24T15:10:09Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-24T15:10:09Z",
+          "completed_at": "2026-11-24T15:10:09Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-24T15:10:09Z",
+          "completed_at": "2026-11-24T15:10:10Z"
+        }
+      ]
+    },
+    {
+      "name": "compose",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550/job/138544639459",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-24T15:09:45Z",
+          "completed_at": "2026-11-24T15:09:47Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-24T15:09:47Z",
+          "completed_at": "2026-11-24T15:09:50Z"
+        },
+        {
+          "name": "Gerar credenciais efêmeras",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-24T15:09:50Z",
+          "completed_at": "2026-11-24T15:09:50Z"
+        },
+        {
+          "name": "Build de containers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-24T15:09:50Z",
+          "completed_at": "2026-11-24T15:10:38Z"
+        },
+        {
+          "name": "Smoke integrado",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-24T15:10:38Z",
+          "completed_at": "2026-11-24T15:11:06Z"
+        },
+        {
+          "name": "Verificar imagens e dependências Java no JAR",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-11-24T15:11:06Z",
+          "completed_at": "2026-11-24T15:11:42Z"
+        },
+        {
+          "name": "Registrar estado e encerrar",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-24T15:11:42Z",
+          "completed_at": "2026-11-24T15:11:52Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-24T15:11:52Z",
+          "completed_at": "2026-11-24T15:11:53Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-24T15:11:53Z",
+          "completed_at": "2026-11-24T15:11:53Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-24T15:11:53Z",
+          "completed_at": "2026-11-24T15:11:53Z"
+        }
+      ]
+    },
+    {
+      "name": "java",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550/job/138544639490",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-24T15:09:45Z",
+          "completed_at": "2026-11-24T15:09:46Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-24T15:09:46Z",
+          "completed_at": "2026-11-24T15:09:47Z"
+        },
+        {
+          "name": "Run actions/setup-java@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-24T15:09:47Z",
+          "completed_at": "2026-11-24T15:09:47Z"
+        },
+        {
+          "name": "Maven, JUnit, JaCoCo e SpotBugs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-24T15:09:47Z",
+          "completed_at": "2026-11-24T15:10:31Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-24T15:10:31Z",
+          "completed_at": "2026-11-24T15:10:32Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-24T15:10:32Z",
+          "completed_at": "2026-11-24T15:10:35Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-24T15:10:35Z",
+          "completed_at": "2026-11-24T15:10:35Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-24T15:10:35Z",
+          "completed_at": "2026-11-24T15:10:35Z"
+        }
+      ]
+    },
+    {
+      "name": "web",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/Vitorfs2509/orbital-alert-fiap-gs2026/actions/runs/45422251550/job/138544639683",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-24T15:09:45Z",
+          "completed_at": "2026-11-24T15:09:46Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-24T15:09:46Z",
+          "completed_at": "2026-11-24T15:09:47Z"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-24T15:09:47Z",
+          "completed_at": "2026-11-24T15:09:47Z"
+        },
+        {
+          "name": "TypeScript e exportação Expo",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-24T15:09:47Z",
+          "completed_at": "2026-11-24T15:10:06Z"
+        },
+        {
+          "name": "Auditar dependências npm",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-24T15:10:06Z",
+          "completed_at": "2026-11-24T15:10:09Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-24T15:10:09Z",
+          "completed_at": "2026-11-24T15:10:11Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-24T15:10:11Z",
+          "completed_at": "2026-11-24T15:10:11Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-24T15:10:11Z",
+          "completed_at": "2026-11-24T15:10:11Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-24T15:10:11Z",
+          "completed_at": "2026-11-24T15:10:11Z"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14936141123,
+      "name": "web-qualidade",
+      "size_in_bytes": 7268,
+      "expired": false
+    },
+    {
+      "id": 14935106305,
+      "name": "java-qualidade",
+      "size_in_bytes": 415783,
+      "expired": false
+    },
+    {
+      "id": 14934846685,
+      "name": "plataforma-e-imagens",
+      "size_in_bytes": 414832,
+      "expired": false
+    },
+    {
+      "id": 14934586480,
+      "name": "python-qualidade",
+      "size_in_bytes": 2633,
+      "expired": false
+    }
+  ]
+}

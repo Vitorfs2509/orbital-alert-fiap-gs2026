@@ -19,5 +19,6 @@ public record RawEventDto(
         LocalDateTime measuredAt,
         LocalDateTime receivedAt,
         String source,
-        Long readingId) {
+        Long readingId,
+        String caseId) {
 }

@@ -13,6 +13,7 @@ from tempfile import NamedTemporaryFile, TemporaryDirectory
 import time
 from urllib.request import urlopen
 from uuid import uuid4
+from process_events import event, membership, write_events
 
 BASE = Path(__file__).resolve().parent
 
@@ -80,6 +81,7 @@ def run_batch(lake, api, raw, status_path):
     started = time.monotonic()
     atomic_json(status_path, {"status": "RUNNING", "lastAttempt": attempt, "lastSuccess": previous.get("lastSuccess")})
     log({"activity": "etl_batch_start", **attempt})
+    write_events(lake, "batches", [event("BATCH_STARTED", "RUNNING", attempt["batchId"])])
     try:
         if not raw.is_dir():
             raise FileNotFoundError("Diretório RAW ausente")
@@ -89,16 +91,24 @@ def run_batch(lake, api, raw, status_path):
             with TemporaryDirectory(prefix="orbital-catalog-") as tmp:
                 names = catalog(api, Path(tmp))
                 execute("raw_to_trusted.py", "--raw-dir", raw, "--trusted-dir", lake / "trusted")
+                with (lake / "trusted/readings.jsonl").open(encoding="utf-8") as trusted:
+                    rows = [json.loads(line) for line in trusted if line.strip()]
+                membership(lake, rows, attempt["batchId"], "TRUSTED_INCLUDED")
                 execute("trusted_to_curated.py", "--trusted-dir", lake / "trusted",
                         "--curated-dir", lake / "curated", "--regions", names)
             quality = json.loads((lake / "trusted/_stats_latest.json").read_text(encoding="utf-8"))
             snapshot = json.loads((lake / "curated/region_risk_latest.json").read_text(encoding="utf-8"))
+            published = {region["regionId"] for region in snapshot}
+            membership(lake, (row for row in rows if row["region_id"] in published),
+                       attempt["batchId"], "CURATED_PUBLISHED")
             attempt.update(status="SUCCESS", quality=quality, regions=len(snapshot))
     except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as error:
         attempt.update(status="FAILED", error=str(error))
     attempt.update(finishedAt=utc(), durationMs=round((time.monotonic() - started) * 1000, 3))
     last_success = attempt if attempt["status"] == "SUCCESS" else previous.get("lastSuccess")
     atomic_json(status_path, {"status": attempt["status"], "lastAttempt": attempt, "lastSuccess": last_success})
+    write_events(lake, "batches", [event("BATCH_FINISHED", attempt["status"], attempt["batchId"],
+                                         duration_ms=attempt["durationMs"])])
     log({"activity": "etl_batch_end", **attempt})
     return 1 if attempt["status"] == "FAILED" else 0
 

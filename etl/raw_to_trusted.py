@@ -59,6 +59,8 @@ REFERENCE_FILENAMES = {"regions.json"}
 
 CSV_COLUMNS = [
     "event_id",
+    "case_id",
+    "reading_id",
     "sensor_id",
     "region_id",
     "sensor_type",
@@ -197,6 +199,8 @@ def validate(record):
 
     clean = {
         "event_id": record.get("eventId"),
+        "case_id": record.get("caseId"),
+        "reading_id": record.get("readingId"),
         "sensor_id": sensor_id,
         "region_id": region_id,
         "sensor_type": sensor_type,

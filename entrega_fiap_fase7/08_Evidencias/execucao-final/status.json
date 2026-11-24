@@ -1,0 +1,78 @@
+{
+  "etl": {
+    "status": "SUCCESS",
+    "lastAttempt": {
+      "batchId": "81942a9b-d755-4290-98d2-d7e44250bd3b",
+      "startedAt": "2026-11-24T12:11:51.05698-03:00",
+      "status": "SUCCESS",
+      "quality": {
+        "layer": "TRUSTED",
+        "run_id": "20261124T151151Z",
+        "started_at": "2026-11-24T15:11:51Z",
+        "files_read": 1,
+        "records_read": 2,
+        "records_valid": 2,
+        "records_rejected": 0,
+        "duplicates_technical": 0,
+        "duplicates_business": 0,
+        "rejected_by_reason": {},
+        "records_by_sensor_type": {
+          "RAINFALL": 2
+        },
+        "records_by_region": {
+          "1": 2
+        },
+        "finished_at": "2026-11-24T15:11:51Z",
+        "acceptance_rate_pct": 100.0,
+        "outputs": {
+          "readings_jsonl": "/lake/trusted/readings.jsonl",
+          "readings_csv": "/lake/trusted/readings.csv",
+          "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T151151Z.jsonl"
+        }
+      },
+      "regions": 1,
+      "finishedAt": "2026-11-24T12:11:51.29173-03:00",
+      "durationMs": 234.743
+    },
+    "lastSuccess": {
+      "batchId": "81942a9b-d755-4290-98d2-d7e44250bd3b",
+      "startedAt": "2026-11-24T12:11:51.05698-03:00",
+      "status": "SUCCESS",
+      "quality": {
+        "layer": "TRUSTED",
+        "run_id": "20261124T151151Z",
+        "started_at": "2026-11-24T15:11:51Z",
+        "files_read": 1,
+        "records_read": 2,
+        "records_valid": 2,
+        "records_rejected": 0,
+        "duplicates_technical": 0,
+        "duplicates_business": 0,
+        "rejected_by_reason": {},
+        "records_by_sensor_type": {
+          "RAINFALL": 2
+        },
+        "records_by_region": {
+          "1": 2
+        },
+        "finished_at": "2026-11-24T15:11:51Z",
+        "acceptance_rate_pct": 100.0,
+        "outputs": {
+          "readings_jsonl": "/lake/trusted/readings.jsonl",
+          "readings_csv": "/lake/trusted/readings.csv",
+          "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T151151Z.jsonl"
+        }
+      },
+      "regions": 1,
+      "finishedAt": "2026-11-24T12:11:51.29173-03:00",
+      "durationMs": 234.743
+    }
+  },
+  "alertsActive": 1,
+  "api": "UP",
+  "alertsGenerated": 1.0,
+  "readingsReceived": 3.0,
+  "readingsProcessed": 2.0,
+  "readingFailures": 1.0,
+  "rawFailures": 0.0
+}
