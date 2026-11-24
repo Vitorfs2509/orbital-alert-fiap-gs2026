@@ -117,7 +117,8 @@ jobs:
           mkdir -p ci-artifacts
       - name: Build de containers
         shell: bash
-        run: docker compose --progress plain build backend frontend etl 2>&1 | sed '/Using generated security password:/s/: .*/: [REMOVIDA]/' | tee ci-artifacts/build.txt
+        run: |
+          docker compose --progress plain build backend frontend etl 2>&1 | sed '/Using generated security password:/s/: .*/: [REMOVIDA]/' | tee ci-artifacts/build.txt
       - name: Smoke integrado
         shell: bash
         run: |

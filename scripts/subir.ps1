@@ -11,7 +11,7 @@ Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
     docker compose @composeArgs config --quiet
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    docker compose @composeArgs up --build -d --wait --wait-timeout 180 postgres schema backend frontend
+    docker compose @composeArgs up --build -d --wait --wait-timeout 180
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     docker compose @composeArgs port frontend 8080
     exit $LASTEXITCODE

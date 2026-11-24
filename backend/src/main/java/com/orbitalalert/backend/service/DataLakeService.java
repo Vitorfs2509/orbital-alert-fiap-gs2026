@@ -76,9 +76,9 @@ public class DataLakeService {
     }
 
     /** Grava um evento bruto na camada RAW. Nunca lanca excecao para o chamador. */
-    public void writeRawEvent(RawEventDto event) {
+    public synchronized boolean writeRawEvent(RawEventDto event) {
         if (!enabled) {
-            return;
+            return false;
         }
         try {
             LocalDate day = event.receivedAt().toLocalDate();
@@ -89,10 +89,12 @@ public class DataLakeService {
             String line = json.writeValueAsString(event) + System.lineSeparator();
             Files.writeString(file, line, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            return true;
 
         } catch (IOException | RuntimeException e) {
             log.warn("Falha ao gravar evento na camada RAW do Data Lake (fluxo operacional preservado): {}",
                     e.toString());
+            return false;
         }
     }
 

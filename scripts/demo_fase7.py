@@ -8,7 +8,6 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-from tempfile import TemporaryDirectory
 from uuid import uuid4
 
 import requests
@@ -56,13 +55,7 @@ def simulator(base, sensor_id, value, source):
 
 
 def etl(base, lake):
-    with TemporaryDirectory(prefix="orbital-catalogo-") as tmp:
-        names = Path(tmp) / "regions.json"
-        regions = {str(region["id"]): region["name"] for region in api(base, "regions")}
-        names.write_text(json.dumps(regions, ensure_ascii=False), encoding="utf-8")
-        python("etl/raw_to_trusted.py", "--raw-dir", lake / "raw", "--trusted-dir", lake / "trusted")
-        python("etl/trusted_to_curated.py", "--trusted-dir", lake / "trusted",
-               "--curated-dir", lake / "curated", "--regions", names)
+    python("etl/pipeline.py", env={**os.environ, "API_URL": base, "DATA_LAKE_PATH": str(lake)})
 
 
 def json_lines(path):

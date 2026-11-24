@@ -1,0 +1,283 @@
+{
+  "dataUtc": "2026-11-24T15:09:06.4068503Z",
+  "antes": {
+    "rawFailures": 0.0,
+    "etl": {
+      "status": "FAILED",
+      "lastAttempt": {
+        "batchId": "9731eda9-83d1-4eec-a741-ac59f2305127",
+        "startedAt": "2026-11-24T12:07:54.970675-03:00",
+        "status": "FAILED",
+        "error": "Diretório RAW ausente",
+        "finishedAt": "2026-11-24T12:07:54.971064-03:00",
+        "durationMs": 0.387
+      },
+      "lastSuccess": {
+        "batchId": "118d4051-a83f-4e54-8bb9-02a0d32420b4",
+        "startedAt": "2026-11-24T12:07:48.916879-03:00",
+        "status": "SUCCESS",
+        "quality": {
+          "layer": "TRUSTED",
+          "run_id": "20261124T150749Z",
+          "started_at": "2026-11-24T15:07:49Z",
+          "files_read": 1,
+          "records_read": 6,
+          "records_valid": 6,
+          "records_rejected": 0,
+          "duplicates_technical": 0,
+          "duplicates_business": 0,
+          "rejected_by_reason": {},
+          "records_by_sensor_type": {
+            "RAINFALL": 6
+          },
+          "records_by_region": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "finished_at": "2026-11-24T15:07:49Z",
+          "acceptance_rate_pct": 100.0,
+          "outputs": {
+            "readings_jsonl": "/lake/trusted/readings.jsonl",
+            "readings_csv": "/lake/trusted/readings.csv",
+            "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T150749Z.jsonl"
+          }
+        },
+        "regions": 3,
+        "finishedAt": "2026-11-24T12:07:49.113937-03:00",
+        "durationMs": 197.043
+      }
+    },
+    "alertsActive": 3,
+    "api": "UP",
+    "alertsGenerated": 1.0,
+    "readingsReceived": 3.0,
+    "readingsProcessed": 2.0,
+    "readingFailures": 1.0
+  },
+  "aposDemo": {
+    "rawFailures": 0.0,
+    "etl": {
+      "status": "SUCCESS",
+      "lastAttempt": {
+        "batchId": "8c9ed822-8925-4faf-bfe7-d5480477059d",
+        "startedAt": "2026-11-24T12:08:55.539364-03:00",
+        "status": "SUCCESS",
+        "quality": {
+          "layer": "TRUSTED",
+          "run_id": "20261124T150855Z",
+          "started_at": "2026-11-24T15:08:55Z",
+          "files_read": 1,
+          "records_read": 8,
+          "records_valid": 8,
+          "records_rejected": 0,
+          "duplicates_technical": 0,
+          "duplicates_business": 0,
+          "rejected_by_reason": {},
+          "records_by_sensor_type": {
+            "RAINFALL": 8
+          },
+          "records_by_region": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 2
+          },
+          "finished_at": "2026-11-24T15:08:55Z",
+          "acceptance_rate_pct": 100.0,
+          "outputs": {
+            "readings_jsonl": "/lake/trusted/readings.jsonl",
+            "readings_csv": "/lake/trusted/readings.csv",
+            "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T150855Z.jsonl"
+          }
+        },
+        "regions": 4,
+        "finishedAt": "2026-11-24T12:08:55.779436-03:00",
+        "durationMs": 240.07
+      },
+      "lastSuccess": {
+        "batchId": "8c9ed822-8925-4faf-bfe7-d5480477059d",
+        "startedAt": "2026-11-24T12:08:55.539364-03:00",
+        "status": "SUCCESS",
+        "quality": {
+          "layer": "TRUSTED",
+          "run_id": "20261124T150855Z",
+          "started_at": "2026-11-24T15:08:55Z",
+          "files_read": 1,
+          "records_read": 8,
+          "records_valid": 8,
+          "records_rejected": 0,
+          "duplicates_technical": 0,
+          "duplicates_business": 0,
+          "rejected_by_reason": {},
+          "records_by_sensor_type": {
+            "RAINFALL": 8
+          },
+          "records_by_region": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 2
+          },
+          "finished_at": "2026-11-24T15:08:55Z",
+          "acceptance_rate_pct": 100.0,
+          "outputs": {
+            "readings_jsonl": "/lake/trusted/readings.jsonl",
+            "readings_csv": "/lake/trusted/readings.csv",
+            "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T150855Z.jsonl"
+          }
+        },
+        "regions": 4,
+        "finishedAt": "2026-11-24T12:08:55.779436-03:00",
+        "durationMs": 240.07
+      }
+    },
+    "alertsActive": 4,
+    "api": "UP",
+    "alertsGenerated": 2.0,
+    "readingsReceived": 5.0,
+    "readingsProcessed": 4.0,
+    "readingFailures": 1.0
+  },
+  "lotePeriodico": {
+    "rawFailures": 0.0,
+    "etl": {
+      "status": "SUCCESS",
+      "lastAttempt": {
+        "batchId": "207c2617-1fe1-4963-be5e-14184c073846",
+        "startedAt": "2026-11-24T12:08:59.431934-03:00",
+        "status": "SUCCESS",
+        "quality": {
+          "layer": "TRUSTED",
+          "run_id": "20261124T150859Z",
+          "started_at": "2026-11-24T15:08:59Z",
+          "files_read": 1,
+          "records_read": 8,
+          "records_valid": 8,
+          "records_rejected": 0,
+          "duplicates_technical": 0,
+          "duplicates_business": 0,
+          "rejected_by_reason": {},
+          "records_by_sensor_type": {
+            "RAINFALL": 8
+          },
+          "records_by_region": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 2
+          },
+          "finished_at": "2026-11-24T15:08:59Z",
+          "acceptance_rate_pct": 100.0,
+          "outputs": {
+            "readings_jsonl": "/lake/trusted/readings.jsonl",
+            "readings_csv": "/lake/trusted/readings.csv",
+            "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T150859Z.jsonl"
+          }
+        },
+        "regions": 4,
+        "finishedAt": "2026-11-24T12:08:59.626943-03:00",
+        "durationMs": 194.991
+      },
+      "lastSuccess": {
+        "batchId": "207c2617-1fe1-4963-be5e-14184c073846",
+        "startedAt": "2026-11-24T12:08:59.431934-03:00",
+        "status": "SUCCESS",
+        "quality": {
+          "layer": "TRUSTED",
+          "run_id": "20261124T150859Z",
+          "started_at": "2026-11-24T15:08:59Z",
+          "files_read": 1,
+          "records_read": 8,
+          "records_valid": 8,
+          "records_rejected": 0,
+          "duplicates_technical": 0,
+          "duplicates_business": 0,
+          "rejected_by_reason": {},
+          "records_by_sensor_type": {
+            "RAINFALL": 8
+          },
+          "records_by_region": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 2
+          },
+          "finished_at": "2026-11-24T15:08:59Z",
+          "acceptance_rate_pct": 100.0,
+          "outputs": {
+            "readings_jsonl": "/lake/trusted/readings.jsonl",
+            "readings_csv": "/lake/trusted/readings.csv",
+            "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T150859Z.jsonl"
+          }
+        },
+        "regions": 4,
+        "finishedAt": "2026-11-24T12:08:59.626943-03:00",
+        "durationMs": 194.991
+      }
+    },
+    "alertsActive": 4,
+    "api": "UP",
+    "alertsGenerated": 2.0,
+    "readingsReceived": 6.0,
+    "readingsProcessed": 4.0,
+    "readingFailures": 2.0
+  },
+  "aposFalhaEtl": {
+    "rawFailures": 0.0,
+    "etl": {
+      "status": "FAILED",
+      "lastAttempt": {
+        "batchId": "105f9143-193f-4cd2-9d00-900e1fc12880",
+        "startedAt": "2026-11-24T12:09:06.224036-03:00",
+        "status": "FAILED",
+        "error": "Diretório RAW ausente",
+        "finishedAt": "2026-11-24T12:09:06.224356-03:00",
+        "durationMs": 0.319
+      },
+      "lastSuccess": {
+        "batchId": "207c2617-1fe1-4963-be5e-14184c073846",
+        "startedAt": "2026-11-24T12:08:59.431934-03:00",
+        "status": "SUCCESS",
+        "quality": {
+          "layer": "TRUSTED",
+          "run_id": "20261124T150859Z",
+          "started_at": "2026-11-24T15:08:59Z",
+          "files_read": 1,
+          "records_read": 8,
+          "records_valid": 8,
+          "records_rejected": 0,
+          "duplicates_technical": 0,
+          "duplicates_business": 0,
+          "rejected_by_reason": {},
+          "records_by_sensor_type": {
+            "RAINFALL": 8
+          },
+          "records_by_region": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 2
+          },
+          "finished_at": "2026-11-24T15:08:59Z",
+          "acceptance_rate_pct": 100.0,
+          "outputs": {
+            "readings_jsonl": "/lake/trusted/readings.jsonl",
+            "readings_csv": "/lake/trusted/readings.csv",
+            "rejected_jsonl": "/lake/trusted/_quality/rejected_20261124T150859Z.jsonl"
+          }
+        },
+        "regions": 4,
+        "finishedAt": "2026-11-24T12:08:59.626943-03:00",
+        "durationMs": 194.991
+      }
+    },
+    "alertsActive": 4,
+    "api": "UP",
+    "alertsGenerated": 2.0,
+    "readingsReceived": 6.0,
+    "readingsProcessed": 4.0,
+    "readingFailures": 2.0
+  },
+  "leituraInvalidaHttp": 404
+}

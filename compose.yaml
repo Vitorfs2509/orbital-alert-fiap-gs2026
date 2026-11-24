@@ -113,6 +113,23 @@ services:
       - lake:/lake
     command: [python, scripts/demo_fase7.py, --etl-only]
 
+  scheduler:
+    <<: *tools
+    profiles: []
+    restart: unless-stopped
+    environment:
+      API_URL: http://backend:8080
+      DATA_LAKE_PATH: /lake
+      ETL_INTERVAL_SECONDS: ${ETL_INTERVAL_SECONDS:-300}
+    volumes:
+      - lake:/lake
+    command: [python, etl/pipeline.py, --periodic]
+    healthcheck:
+      test: [CMD, python, etl/pipeline.py, --healthcheck]
+      interval: 5s
+      timeout: 3s
+      retries: 8
+
   oracle:
     image: ghcr.io/gvenzl/oracle-free:23.26.3-slim
     profiles: [oracle]

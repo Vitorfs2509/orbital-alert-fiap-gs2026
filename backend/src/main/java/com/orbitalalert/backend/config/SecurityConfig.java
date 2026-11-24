@@ -48,14 +48,14 @@ public class SecurityConfig {
                 .exceptionHandling(errors -> errors.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(new ServiceTokens(adminToken, ingestToken), AnonymousAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/health", "/api/regions", "/api/regions/*",
+                        .requestMatchers(HttpMethod.GET, "/api/health", "/api/status", "/api/regions", "/api/regions/*",
                                 "/api/sensors", "/api/sensors/*", "/api/readings/latest", "/api/alerts",
                                 "/api/alerts/active", "/api/risk", "/api/recommendations/regions/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/readings").hasRole("INGEST")
                         .requestMatchers("/api/auth/register", "/api/regions/**", "/api/sensors/**",
                                 "/api/alerts/**", "/api/recommendations/**",
-                                "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").hasRole("ADMIN")
+                                "/actuator/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").hasRole("ADMIN")
                         .anyRequest().denyAll())
                 .build();
     }
