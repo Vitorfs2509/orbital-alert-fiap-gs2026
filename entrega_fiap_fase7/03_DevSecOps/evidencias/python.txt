@@ -1,0 +1,62 @@
+test_dry_run_never_builds_a_client (test_oci_sync.DryRunTest.test_dry_run_never_builds_a_client) ... ok
+test_dry_run_respects_layer_filter (test_oci_sync.DryRunTest.test_dry_run_respects_layer_filter) ... ok
+test_dry_run_works_without_any_oci_configuration (test_oci_sync.DryRunTest.test_dry_run_works_without_any_oci_configuration) ... ok
+test_missing_data_lake_directory_is_reported (test_oci_sync.DryRunTest.test_missing_data_lake_directory_is_reported) ... ok
+test_real_run_without_configuration_fails_with_a_readable_message (test_oci_sync.DryRunTest.test_real_run_without_configuration_fails_with_a_readable_message) ... ok
+test_all_is_the_default_and_covers_the_three_layers (test_oci_sync.LayerSelectionTest.test_all_is_the_default_and_covers_the_three_layers) ... ok
+test_missing_layer_directory_yields_no_files (test_oci_sync.LayerSelectionTest.test_missing_layer_directory_yields_no_files) ... ok
+test_plan_for_all_layers_skips_git_placeholders (test_oci_sync.LayerSelectionTest.test_plan_for_all_layers_skips_git_placeholders) ... ok
+test_plan_only_includes_the_selected_layer (test_oci_sync.LayerSelectionTest.test_plan_only_includes_the_selected_layer) ... ok
+test_single_layer (test_oci_sync.LayerSelectionTest.test_single_layer) ... ok
+test_unknown_layer_is_rejected (test_oci_sync.LayerSelectionTest.test_unknown_layer_is_rejected) ... ok
+test_content_type_per_extension (test_oci_sync.ObjectNameTest.test_content_type_per_extension) ... ok
+test_file_outside_data_lake_is_rejected (test_oci_sync.ObjectNameTest.test_file_outside_data_lake_is_rejected) ... ok
+test_object_name_always_uses_forward_slashes (test_oci_sync.ObjectNameTest.test_object_name_always_uses_forward_slashes) ... ok
+test_optional_prefix_is_prepended_and_normalized (test_oci_sync.ObjectNameTest.test_optional_prefix_is_prepended_and_normalized) ... ok
+test_raw_path_keeps_date_partition (test_oci_sync.ObjectNameTest.test_raw_path_keeps_date_partition) ... ok
+test_complete_configuration_passes (test_oci_sync.SettingsValidationTest.test_complete_configuration_passes) ... ok
+test_defaults_match_the_official_sdk (test_oci_sync.SettingsValidationTest.test_defaults_match_the_official_sdk) ... ok
+test_describe_never_exposes_secrets (test_oci_sync.SettingsValidationTest.test_describe_never_exposes_secrets) ... ok
+test_missing_bucket_is_reported (test_oci_sync.SettingsValidationTest.test_missing_bucket_is_reported) ... ok
+test_missing_config_file_is_reported (test_oci_sync.SettingsValidationTest.test_missing_config_file_is_reported) ... ok
+test_reads_environment_variables (test_oci_sync.SettingsValidationTest.test_reads_environment_variables) ... ok
+test_namespace_falls_back_to_the_sdk (test_oci_sync.UploadTest.test_namespace_falls_back_to_the_sdk) ... ok
+test_namespace_from_env_wins_over_sdk_lookup (test_oci_sync.UploadTest.test_namespace_from_env_wins_over_sdk_lookup) ... ok
+test_upload_sends_content_and_content_type (test_oci_sync.UploadTest.test_upload_sends_content_and_content_type) ... ok
+test_dry_run_never_opens_a_connection (test_oracle_database.CliTest.test_dry_run_never_opens_a_connection) ... ok
+test_dry_run_never_prints_the_password (test_oracle_database.CliTest.test_dry_run_never_prints_the_password) ... ok
+test_dry_run_works_without_any_oracle_configuration (test_oracle_database.CliTest.test_dry_run_works_without_any_oracle_configuration) ... ok
+test_empty_curated_layer_is_reported (test_oracle_database.CliTest.test_empty_curated_layer_is_reported) ... ok
+test_missing_curated_directory_is_reported (test_oracle_database.CliTest.test_missing_curated_directory_is_reported) ... ok
+test_real_run_without_password_fails_with_a_readable_message (test_oracle_database.CliTest.test_real_run_without_password_fails_with_a_readable_message) ... ok
+test_binds_cover_exactly_the_merge_placeholders (test_oracle_database.ColumnMappingTest.test_binds_cover_exactly_the_merge_placeholders) ... ok
+test_csv_strings_are_converted_to_numbers (test_oracle_database.ColumnMappingTest.test_csv_strings_are_converted_to_numbers) ... ok
+test_json_region_maps_every_column (test_oracle_database.ColumnMappingTest.test_json_region_maps_every_column) ... ok
+test_log_line_is_readable (test_oracle_database.ColumnMappingTest.test_log_line_is_readable) ... ok
+test_region_without_generated_at_is_rejected (test_oracle_database.ColumnMappingTest.test_region_without_generated_at_is_rejected)
+GENERATED_AT faz parte da chave do MERGE; sem ele nao ha idempotencia. ... ok
+test_region_without_id_is_rejected (test_oracle_database.ColumnMappingTest.test_region_without_id_is_rejected) ... ok
+test_csv_is_used_when_json_is_absent (test_oracle_database.CuratedParsingTest.test_csv_is_used_when_json_is_absent) ... ok
+test_invalid_json_is_reported (test_oracle_database.CuratedParsingTest.test_invalid_json_is_reported) ... ok
+test_json_is_preferred_over_csv (test_oracle_database.CuratedParsingTest.test_json_is_preferred_over_csv) ... ok
+test_missing_curated_layer_is_reported (test_oracle_database.CuratedParsingTest.test_missing_curated_layer_is_reported) ... ok
+test_every_column_has_a_placeholder (test_oracle_database.MergeTest.test_every_column_has_a_placeholder) ... ok
+test_existing_table_is_not_recreated (test_oracle_database.MergeTest.test_existing_table_is_not_recreated) ... ok
+test_merge_binds_the_row_as_named_parameters (test_oracle_database.MergeTest.test_merge_binds_the_row_as_named_parameters) ... ok
+test_merge_key_is_region_plus_snapshot (test_oracle_database.MergeTest.test_merge_key_is_region_plus_snapshot) ... ok
+test_table_is_created_when_absent (test_oracle_database.MergeTest.test_table_is_created_when_absent) ... ok
+test_unexpected_ddl_error_is_not_swallowed (test_oracle_database.MergeTest.test_unexpected_ddl_error_is_not_swallowed) ... ok
+test_complete_configuration_passes (test_oracle_database.SettingsTest.test_complete_configuration_passes) ... ok
+test_defaults_match_the_docker_container (test_oracle_database.SettingsTest.test_defaults_match_the_docker_container) ... ok
+test_describe_never_exposes_the_password (test_oracle_database.SettingsTest.test_describe_never_exposes_the_password) ... ok
+test_incomplete_configuration_raises (test_oracle_database.SettingsTest.test_incomplete_configuration_raises) ... ok
+test_missing_password_is_reported (test_oracle_database.SettingsTest.test_missing_password_is_reported) ... ok
+test_reads_environment_variables (test_oracle_database.SettingsTest.test_reads_environment_variables) ... ok
+test_empty_values_become_none (test_oracle_database.TimestampTest.test_empty_values_become_none) ... ok
+test_offset_is_converted_to_utc (test_oracle_database.TimestampTest.test_offset_is_converted_to_utc) ... ok
+test_z_suffix_becomes_naive_utc (test_oracle_database.TimestampTest.test_z_suffix_becomes_naive_utc) ... ok
+
+----------------------------------------------------------------------
+Ran 56 tests in 0.076s
+
+OK

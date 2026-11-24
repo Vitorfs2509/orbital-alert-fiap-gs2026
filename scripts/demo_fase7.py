@@ -20,7 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def api(base, path, payload=None):
     url = f"{base.rstrip('/')}/api/{path}"
     response = (requests.get(url, timeout=15) if payload is None
-                else requests.post(url, json=payload, timeout=15))
+                else requests.post(url, json=payload, timeout=15, headers={
+                    "Authorization": "Bearer " + os.environ.get("ORBITAL_ADMIN_TOKEN", ""),
+                }))
     response.raise_for_status()
     return response.json()
 

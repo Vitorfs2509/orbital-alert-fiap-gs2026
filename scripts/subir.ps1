@@ -2,6 +2,7 @@
 param([string]$EnvFile)
 
 $ErrorActionPreference = 'Stop'
+& (Join-Path $PSScriptRoot 'configurar.ps1') -EnvFile $EnvFile
 if ($EnvFile) { $EnvFile = (Resolve-Path -LiteralPath $EnvFile).Path }
 $composeArgs = @()
 if ($EnvFile) { $composeArgs += @('--env-file', $EnvFile) }

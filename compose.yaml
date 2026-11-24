@@ -59,6 +59,8 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/orbital_alert
       DB_USER: orbital_alert
       DB_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env local}
+      ORBITAL_ADMIN_TOKEN: ${ORBITAL_ADMIN_TOKEN:?Execute scripts/configurar.ps1}
+      ORBITAL_INGEST_TOKEN: ${ORBITAL_INGEST_TOKEN:?Execute scripts/configurar.ps1}
       DATA_LAKE_PATH: /lake
       AI_PROVIDER: ${AI_PROVIDER:-mock}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -94,6 +96,7 @@ services:
     <<: *tools
     environment:
       API_URL: http://backend:8080
+      ORBITAL_INGEST_TOKEN: ${ORBITAL_INGEST_TOKEN:?Execute scripts/configurar.ps1}
       IOT_OFFLINE_FILE: /tmp/orbital-offline.json
     command: [python, iot-simulator/sensor_simulator.py, --help]
 
@@ -102,6 +105,8 @@ services:
     environment:
       API_URL: http://backend:8080
       BROWSER_API_URL: http://frontend:8080
+      ORBITAL_ADMIN_TOKEN: ${ORBITAL_ADMIN_TOKEN:?Execute scripts/configurar.ps1}
+      ORBITAL_INGEST_TOKEN: ${ORBITAL_INGEST_TOKEN:?Execute scripts/configurar.ps1}
       IOT_OFFLINE_FILE: /tmp/orbital-offline.json
       DATA_LAKE_PATH: /lake
     volumes:

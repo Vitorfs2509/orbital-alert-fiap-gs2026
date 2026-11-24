@@ -1,0 +1,141 @@
+name: Orbital Alert CI
+on:
+  push:
+    branches: [entrega/fase7-mvp-final]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: orbital-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  java:
+    runs-on: ubuntu-latest
+    env:
+      SPRING_PROFILES_ACTIVE: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Maven, JUnit, JaCoCo e SpotBugs
+        run: |
+          mkdir -p ci-artifacts
+          mvn -B -f backend/pom.xml verify spotbugs:check 2>&1 | sed '/Using generated security password:/s/: .*/: [REMOVIDA]/' | tee ci-artifacts/maven.txt
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: java-qualidade
+          path: |
+            ci-artifacts/
+            backend/target/surefire-reports/*.xml
+            backend/target/site/jacoco/
+            backend/target/spotbugsXml.xml
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Testes e análise estática
+        shell: bash
+        run: |
+          mkdir -p ci-artifacts
+          python -m pip install ruff pip-audit
+          python -m unittest discover -s etl/tests -v 2>&1 | tee ci-artifacts/python.txt
+          ruff check --select E9,F63,F7,F82 etl iot-simulator scripts | tee ci-artifacts/ruff.txt
+      - name: Dependências Python
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p ci-artifacts
+          result=0
+          for requirement in iot-simulator/requirements.txt etl/requirements-oracle-db.txt etl/requirements-oci.txt; do
+            python -m pip_audit -r "$requirement" -f json -o "ci-artifacts/$(basename "$requirement").json" || result=1
+          done
+          exit "$result"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-qualidade
+          path: ci-artifacts/
+  web:
+    runs-on: ubuntu-latest
+    env:
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_OFFLINE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: TypeScript e exportação Expo
+        working-directory: mobile
+        shell: bash
+        run: |
+          mkdir -p ../ci-artifacts
+          npm ci --no-audit --no-fund 2>&1 | tee ../ci-artifacts/npm-ci.txt
+          npm run typecheck 2>&1 | tee ../ci-artifacts/typescript.txt
+          npm run build:web 2>&1 | tee ../ci-artifacts/expo.txt
+      - name: Auditar dependências npm
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p ci-artifacts
+          npm --prefix mobile audit --package-lock-only --audit-level=high --json > ci-artifacts/npm-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-qualidade
+          path: ci-artifacts/
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      COMPOSE_PROJECT_NAME: orbital-ci
+      ORBITAL_WEB_PORT: '18727'
+      TRIVY_IMAGE: ghcr.io/aquasecurity/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerar credenciais efêmeras
+        shell: bash
+        run: |
+          umask 077
+          for key in POSTGRES_PASSWORD ORBITAL_ADMIN_TOKEN ORBITAL_INGEST_TOKEN; do
+            printf '%s=%s\n' "$key" "$(openssl rand -hex 32)" >> .env
+          done
+          mkdir -p ci-artifacts
+      - name: Build de containers
+        shell: bash
+        run: docker compose --progress plain build backend frontend etl 2>&1 | sed '/Using generated security password:/s/: .*/: [REMOVIDA]/' | tee ci-artifacts/build.txt
+      - name: Smoke integrado
+        shell: bash
+        run: |
+          docker compose up -d --wait --wait-timeout 180 2>&1 | tee ci-artifacts/compose.txt
+          docker compose run --rm --no-deps -T etl python scripts/demo_fase7.py > ci-artifacts/demo.json 2> ci-artifacts/demo.txt
+      - name: Verificar imagens e dependências Java no JAR
+        if: always()
+        shell: bash
+        run: bash scripts/escanear_imagens.sh ci-artifacts
+      - name: Registrar estado e encerrar
+        if: always()
+        shell: bash
+        run: |
+          docker compose ps -a > ci-artifacts/services.txt
+          docker compose logs --no-color 2>&1 | sed '/Using generated security password:/s/: .*/: [REMOVIDA]/' > ci-artifacts/services-log.txt
+          docker compose --profile jobs --profile oracle down
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plataforma-e-imagens
+          path: ci-artifacts/

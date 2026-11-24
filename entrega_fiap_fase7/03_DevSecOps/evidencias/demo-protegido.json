@@ -1,0 +1,193 @@
+{
+  "runId": "8bafd2f54eda",
+  "finishedUtc": "2026-11-24T15:00:00.209701+00:00",
+  "inputs": "leituras IoT simuladas enviadas pelo simulador por HTTP",
+  "region": {
+    "id": 2,
+    "name": "AgroSmart · Demo 8bafd2f54eda",
+    "city": "São Paulo",
+    "state": "SP",
+    "latitude": -23.5,
+    "longitude": -46.62,
+    "satelliteRiskScore": 0.0,
+    "riskLevel": "LOW"
+  },
+  "sensor": {
+    "id": 2,
+    "regionId": 2,
+    "type": "RAINFALL",
+    "status": "ACTIVE",
+    "unit": "mm/h"
+  },
+  "readings": [
+    {
+      "id": 3,
+      "sensorId": 2,
+      "sensorType": "RAINFALL",
+      "value": 45.0,
+      "measuredAt": "2026-11-24T14:59:59.505085491"
+    },
+    {
+      "id": 4,
+      "sensorId": 2,
+      "sensorType": "RAINFALL",
+      "value": 95.0,
+      "measuredAt": "2026-11-24T14:59:59.88029708"
+    }
+  ],
+  "alert": {
+    "id": 2,
+    "regionId": 2,
+    "regionName": "AgroSmart · Demo 8bafd2f54eda",
+    "title": "Alerta de chuva intensa",
+    "description": "Volume de chuva elevado.",
+    "severity": "HIGH",
+    "status": "OPEN",
+    "createdAt": "2026-11-24T14:59:59.884992",
+    "resolvedAt": null
+  },
+  "raw": [
+    {
+      "eventId": "248f02c3-fe28-41fc-b7f4-0071d998edfd",
+      "sensorId": 2,
+      "regionId": 2,
+      "sensorType": "RAINFALL",
+      "value": 45.0,
+      "unit": "mm/h",
+      "measuredAt": "2026-11-24T14:59:59.505085491",
+      "receivedAt": "2026-11-24T14:59:59.505085491",
+      "source": "IOT_SIMULATOR:8bafd2f54eda",
+      "readingId": 3
+    },
+    {
+      "eventId": "0f8fc0e2-f81b-4c03-949e-e712af2c5b6b",
+      "sensorId": 2,
+      "regionId": 2,
+      "sensorType": "RAINFALL",
+      "value": 95.0,
+      "unit": "mm/h",
+      "measuredAt": "2026-11-24T14:59:59.88029708",
+      "receivedAt": "2026-11-24T14:59:59.88029708",
+      "source": "IOT_SIMULATOR:8bafd2f54eda",
+      "readingId": 4
+    }
+  ],
+  "trusted": [
+    {
+      "event_id": "248f02c3-fe28-41fc-b7f4-0071d998edfd",
+      "sensor_id": 2,
+      "region_id": 2,
+      "sensor_type": "RAINFALL",
+      "value": 45.0,
+      "unit": "mm/h",
+      "measured_at": "2026-11-24T14:59:59Z",
+      "received_at": "2026-11-24T14:59:59Z",
+      "source": "IOT_SIMULATOR:8bafd2f54eda",
+      "source_file": "/lake/raw/2026/11/24/readings-2026-11-24.jsonl",
+      "ingested_at": "2026-11-24T15:00:00Z"
+    },
+    {
+      "event_id": "0f8fc0e2-f81b-4c03-949e-e712af2c5b6b",
+      "sensor_id": 2,
+      "region_id": 2,
+      "sensor_type": "RAINFALL",
+      "value": 95.0,
+      "unit": "mm/h",
+      "measured_at": "2026-11-24T14:59:59Z",
+      "received_at": "2026-11-24T14:59:59Z",
+      "source": "IOT_SIMULATOR:8bafd2f54eda",
+      "source_file": "/lake/raw/2026/11/24/readings-2026-11-24.jsonl",
+      "ingested_at": "2026-11-24T15:00:00Z"
+    }
+  ],
+  "risk": {
+    "dataSource": "CURATED_LAYER",
+    "context": {
+      "regionId": 2,
+      "regionName": "AgroSmart · Demo 8bafd2f54eda",
+      "riskScore": 100,
+      "riskLevel": "HIGH",
+      "riskType": "FLOOD",
+      "dominantSensorType": "RAINFALL",
+      "readings": 2,
+      "sensors": 1,
+      "windowStart": "2026-11-24T14:59:59Z",
+      "windowEnd": "2026-11-24T14:59:59Z",
+      "indicators": [
+        {
+          "sensorType": "RAINFALL",
+          "unit": "mm/h",
+          "samples": 2,
+          "avgValue": 70.0,
+          "minValue": 45.0,
+          "maxValue": 95.0,
+          "lastValue": 95.0,
+          "baseline": 0.0,
+          "threshold": 60.0,
+          "direction": "above",
+          "riskType": "FLOOD",
+          "subScore": 100,
+          "trend": "RISING"
+        }
+      ],
+      "ignoredSensorTypes": [],
+      "generatedAt": "2026-11-24T15:00:00Z"
+    }
+  },
+  "recommendation": {
+    "regionId": 2,
+    "regionName": "AgroSmart · Demo 8bafd2f54eda",
+    "riskScore": 100,
+    "riskLevel": "HIGH",
+    "riskType": "FLOOD",
+    "recommendation": "Risco ALTO em AgroSmart · Demo 8bafd2f54eda: score 100/100 com indicacao de risco hidrologico (enchente). O indicador determinante e RAINFALL, com leitura atual de 95.0 mm/h e media de 70.0 frente ao limiar de alerta de 60.0, tendencia de elevacao do risco. Acoes sugeridas: acionar a defesa civil, comunicar moradores das areas ribeirinhas, avaliar rotas de evacuacao e ampliar a frequencia de leitura dos sensores de nivel e chuva. Esta recomendacao e apoio a decisao: a execucao das acoes cabe a equipe responsavel.",
+    "generatedAt": "2026-11-24T15:00:00.205804135",
+    "aiMode": "MOCK",
+    "dataSource": "CURATED_LAYER",
+    "context": {
+      "regionId": 2,
+      "regionName": "AgroSmart · Demo 8bafd2f54eda",
+      "riskScore": 100,
+      "riskLevel": "HIGH",
+      "riskType": "FLOOD",
+      "dominantSensorType": "RAINFALL",
+      "readings": 2,
+      "sensors": 1,
+      "windowStart": "2026-11-24T14:59:59Z",
+      "windowEnd": "2026-11-24T14:59:59Z",
+      "indicators": [
+        {
+          "sensorType": "RAINFALL",
+          "unit": "mm/h",
+          "samples": 2,
+          "avgValue": 70.0,
+          "minValue": 45.0,
+          "maxValue": 95.0,
+          "lastValue": 95.0,
+          "baseline": 0.0,
+          "threshold": 60.0,
+          "direction": "above",
+          "riskType": "FLOOD",
+          "subScore": 100,
+          "trend": "RISING"
+        }
+      ],
+      "ignoredSensorTypes": [],
+      "generatedAt": "2026-11-24T15:00:00Z"
+    }
+  },
+  "checks": [
+    "Health da API pelo endereço público do painel",
+    "Sensor RAINFALL cadastrado na região",
+    "Leitura normal retornou pela consulta ao banco operacional",
+    "Leitura abaixo de 60 não criou alerta ativo",
+    "Nova leitura substituiu a anterior como mais recente",
+    "Limiar de chuva criou um alerta HIGH na região",
+    "Duas leituras operacionais encontradas no RAW por origem, leitura, sensor e região",
+    "TRUSTED preservou os dois eventos RAW",
+    "CURATED calculou score e indicador de chuva para os dois eventos",
+    "Os endpoints consumidos pelo painel retornaram região, sensor, alerta e leitura",
+    "API do painel expôs score e indicadores do mesmo CURATED",
+    "API retornou recomendação consultiva com origem e provedor"
+  ]
+}

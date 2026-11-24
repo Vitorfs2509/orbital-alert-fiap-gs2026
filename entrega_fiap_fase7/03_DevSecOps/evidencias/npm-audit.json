@@ -1,0 +1,375 @@
+{
+  "antes": {
+    "info": 0,
+    "low": 8,
+    "moderate": 15,
+    "high": 19,
+    "critical": 2,
+    "total": 44
+  },
+  "depois": {
+    "info": 0,
+    "low": 9,
+    "moderate": 13,
+    "high": 10,
+    "critical": 1,
+    "total": 33
+  },
+  "alertas": [
+    {
+      "pacote": "@expo/bunyan",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/cli",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/config",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/config-plugins",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/metro-config",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/plist",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/prebuild-config",
+      "severidade": "moderate",
+      "ajuste": true,
+      "avisos": []
+    },
+    {
+      "pacote": "@expo/rudder-sdk-node",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@react-native-community/cli",
+      "severidade": "low",
+      "ajuste": true,
+      "avisos": []
+    },
+    {
+      "pacote": "@react-native-community/cli-doctor",
+      "severidade": "low",
+      "ajuste": true,
+      "avisos": []
+    },
+    {
+      "pacote": "@react-native-community/cli-hermes",
+      "severidade": "low",
+      "ajuste": true,
+      "avisos": []
+    },
+    {
+      "pacote": "@react-native-community/cli-platform-android",
+      "severidade": "low",
+      "ajuste": {
+        "name": "react-native",
+        "version": "0.88.1",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@react-native-community/cli-platform-apple",
+      "severidade": "low",
+      "ajuste": {
+        "name": "react-native",
+        "version": "0.88.1",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@react-native-community/cli-platform-ios",
+      "severidade": "low",
+      "ajuste": {
+        "name": "react-native",
+        "version": "0.88.1",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "@xmldom/xmldom",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-wh4c-j3r5-mjhp",
+        "https://github.com/advisories/GHSA-2v35-w6hq-6mfw",
+        "https://github.com/advisories/GHSA-f6ww-3ggp-fr8h",
+        "https://github.com/advisories/GHSA-x6wf-f3px-wcqx",
+        "https://github.com/advisories/GHSA-j759-j44w-7fr8",
+        "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6",
+        "https://github.com/advisories/GHSA-w2rr-34g9-rvrj",
+        "https://github.com/advisories/GHSA-4w3w-2rp5-g8jm",
+        "https://github.com/advisories/GHSA-c7q8-3ch8-vqpv",
+        "https://github.com/advisories/GHSA-27p8-2357-5qqv",
+        "https://github.com/advisories/GHSA-6h8r-xr42-gp59",
+        "https://github.com/advisories/GHSA-8344-3jmq-59r6",
+        "https://github.com/advisories/GHSA-x4fp-j954-r2f4",
+        "https://github.com/advisories/GHSA-965w-775f-mr7g",
+        "https://github.com/advisories/GHSA-93r5-fhx6-vmg9"
+      ]
+    },
+    {
+      "pacote": "babel-plugin-react-compiler",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "babel-preset-expo",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "cacache",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "expo",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "expo-asset",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "expo-constants",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "fast-xml-parser",
+      "severidade": "low",
+      "ajuste": {
+        "name": "react-native",
+        "version": "0.88.1",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-474x-hrwr-fgx4"
+      ]
+    },
+    {
+      "pacote": "glob",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4"
+      ]
+    },
+    {
+      "pacote": "image-size",
+      "severidade": "high",
+      "ajuste": true,
+      "avisos": [
+        "https://github.com/advisories/GHSA-5p2g-fcmc-qvqq",
+        "https://github.com/advisories/GHSA-w3rx-r6r6-pgpr"
+      ]
+    },
+    {
+      "pacote": "minimatch",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-g3hv-75wg-m249"
+      ]
+    },
+    {
+      "pacote": "postcss",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
+        "https://github.com/advisories/GHSA-6g55-p6wh-862q",
+        "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp",
+        "https://github.com/advisories/GHSA-r28c-9q8g-f849"
+      ]
+    },
+    {
+      "pacote": "react-native",
+      "severidade": "low",
+      "ajuste": {
+        "name": "react-native",
+        "version": "0.88.1",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "send",
+      "severidade": "low",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-m6fv-jmcg-4jfg"
+      ]
+    },
+    {
+      "pacote": "tar",
+      "severidade": "critical",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-34x7-hfp2-rc4v",
+        "https://github.com/advisories/GHSA-8qq5-rm4j-mr97",
+        "https://github.com/advisories/GHSA-83g3-92jg-28cx",
+        "https://github.com/advisories/GHSA-qffp-2rhf-9h96",
+        "https://github.com/advisories/GHSA-9ppj-qmqm-q256",
+        "https://github.com/advisories/GHSA-r6q2-hw4h-h46w",
+        "https://github.com/advisories/GHSA-vmf3-w455-68vh",
+        "https://github.com/advisories/GHSA-w8wr-v893-vjvp",
+        "https://github.com/advisories/GHSA-23hp-3jrh-7fpw",
+        "https://github.com/advisories/GHSA-8x88-c5mf-7j5w",
+        "https://github.com/advisories/GHSA-gvwx-54wh-qm9j",
+        "https://github.com/advisories/GHSA-r292-9mhp-454m"
+      ]
+    },
+    {
+      "pacote": "uuid",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-w5hq-g745-h8pq"
+      ]
+    },
+    {
+      "pacote": "xcode",
+      "severidade": "moderate",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": []
+    },
+    {
+      "pacote": "zod",
+      "severidade": "high",
+      "ajuste": {
+        "name": "expo",
+        "version": "58.0.26",
+        "isSemVerMajor": true
+      },
+      "avisos": [
+        "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5"
+      ]
+    },
+    {
+      "pacote": "zod-validation-error",
+      "severidade": "high",
+      "ajuste": true,
+      "avisos": []
+    }
+  ]
+}

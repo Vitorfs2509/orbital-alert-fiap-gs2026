@@ -42,7 +42,9 @@ def send_reading(payload: dict) -> None:
     print("Payload enviado:", json.dumps(payload, ensure_ascii=False))
 
     try:
-        response = requests.post(READINGS_ENDPOINT, json=payload, timeout=5)
+        token = os.getenv("ORBITAL_INGEST_TOKEN")
+        headers = {"Authorization": "Bearer " + token} if token else {}
+        response = requests.post(READINGS_ENDPOINT, json=payload, timeout=5, headers=headers)
         print("Status HTTP:", response.status_code)
 
         if response.content:

@@ -1,0 +1,6 @@
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.935 s -- in com.orbitalalert.backend.OrbitalAlertBackendApplicationTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.888 s -- in com.orbitalalert.backend.ApiSecurityTests
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Analyzed bundle 'orbital-alert-backend' with 57 classes
+[INFO] BugInstance size is 0
+[INFO] BUILD SUCCESS
