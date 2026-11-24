@@ -14,6 +14,7 @@ import com.orbitalalert.backend.dto.RecommendationDto.RegionRisk;
  * {@link OpenAiClient} (opcional, habilitado por configuracao).
  */
 public interface AiClient {
+    record Recommendation(String text, String mode) {}
 
     /** Identificacao do modo ativo, devolvida na resposta da API (ex.: MOCK). */
     String mode();
@@ -21,7 +22,7 @@ public interface AiClient {
     /**
      * @param prompt contexto textual montado por {@link AiPromptBuilder}
      * @param risk   dados estruturados da regiao, para fallback deterministico
-     * @return texto de recomendacao em portugues
+     * @return texto em portugues e a origem efetiva dessa resposta
      */
-    String generateRecommendation(String prompt, RegionRisk risk);
+    Recommendation generateRecommendation(String prompt, RegionRisk risk);
 }

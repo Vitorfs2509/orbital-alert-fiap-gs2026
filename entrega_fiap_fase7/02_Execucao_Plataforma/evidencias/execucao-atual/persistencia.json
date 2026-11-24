@@ -1,0 +1,46 @@
+{
+  "checkedUtc": "2026-11-24T14:47:10.2668725Z",
+  "runId": "a3eb337ed8fc",
+  "postgresql": "PostgreSQL 16.16 (Debian 16.16-1.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit",
+  "java": [
+    "openjdk version \"21.0.13.1\" 2026-11-17 LTS",
+    "OpenJDK Runtime Environment Temurin-21.0.13.1+2 (build 21.0.13.1+2-LTS)",
+    "OpenJDK 64-Bit Server VM Temurin-21.0.13.1+2 (build 21.0.13.1+2-LTS, mixed mode, sharing)"
+  ],
+  "postgresqlRows": [
+    "1|1|45.00",
+    "2|1|95.00"
+  ],
+  "latestReadingId": 2,
+  "alertId": 1,
+  "curatedScore": 100,
+  "dataSource": "CURATED_LAYER",
+  "services": [
+    {
+      "service": "backend",
+      "hostPorts": [],
+      "status": "healthy",
+      "state": "running"
+    },
+    {
+      "service": "frontend",
+      "hostPorts": [
+        "127.0.0.1:18727"
+      ],
+      "status": "healthy",
+      "state": "running"
+    },
+    {
+      "service": "postgres",
+      "hostPorts": [],
+      "status": "healthy",
+      "state": "running"
+    },
+    {
+      "service": "schema",
+      "hostPorts": [],
+      "status": "",
+      "state": "exited"
+    }
+  ]
+}

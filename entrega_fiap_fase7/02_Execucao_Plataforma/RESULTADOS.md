@@ -1,0 +1,18 @@
+# Resultados da Etapa 2 · 24/11/2026
+
+Execução na branch `entrega/fase7-mvp-final`, em projeto Compose de validação isolado no Docker Desktop. **Dados de entrada simulados; execução e capturas reais.** O [guia](COMO_RODAR_COMPOSE.md) contém comandos reproduzíveis. As evidências da Fase 6 permanecem no pacote anterior e no catálogo da [auditoria](../AUDITORIA_ETAPA_1.md).
+
+| Verificação | Resultado observado | Evidência |
+|---|---|---|
+| Compose e imagens | `config --quiet`, build de backend, frontend e Python, bootstrap do schema e health dos três serviços concluídos. Apenas o frontend publicou porta, em `127.0.0.1:18727` na validação. | [Build e inicialização](evidencias/execucao-atual/verificacoes.txt), [ambiente e serviços](evidencias/execucao-atual/persistencia.json) |
+| Java e Expo | Maven passou um teste de contexto em Java 21. `npm ci`, TypeScript e export Expo web concluíram. | [Verificações de build](evidencias/execucao-atual/verificacoes.txt) |
+| Python | 56 testes existentes de ETL/integrações passaram. | [Verificações](evidencias/execucao-atual/verificacoes.txt) |
+| PostgreSQL 16.16 | O primeiro startup integrado acusou incompatibilidade entre `NUMERIC` do schema e `FLOAT` esperado pelo JPA. A correção preservou os campos decimais no PostgreSQL e ajustou o mapeamento. O startup seguinte passou com `ddl-auto=validate`. Em uma base separada com DDL legado, `1\|1\|RAIN` tornou-se `1\|1\|RAINFALL` em duas execuções da migração, preservando IDs. | [Verificações](evidencias/execucao-atual/verificacoes.txt) |
+| Cenário `a3eb337ed8fc` | 12 verificações aprovadas. Leituras simuladas de 45 e 95 mm/h para `RAINFALL`; a primeira não produziu alerta ativo, a segunda produziu `HIGH`. Os dois registros passaram por RAW e TRUSTED. O CURATED gerou score **100/100**, risco `FLOOD` e média **70 mm/h**. API retornou origem `CURATED_LAYER` e recomendação `MOCK`. | [Execução completa e IDs](evidencias/execucao-atual/demo.json) |
+| Navegador · base vazia | O painel exibiu ausência de regiões e alertas com respostas HTTP 200. | [Captura](evidencias/execucao-atual/web-vazio.png), [registro](evidencias/execucao-atual/web-vazio.json) |
+| Navegador · cenário integrado | Dashboard exibiu região, score e fonte CURATED. A tela de detalhe mostrou o ID da leitura, o ID do alerta, o indicador e o modo da recomendação. | [Dashboard](evidencias/execucao-atual/web-dashboard.png), [detalhe](evidencias/execucao-atual/web-regiao.png), [registro](evidencias/execucao-atual/web-preenchido.json) |
+| Navegador · falha | Com o backend parado no Compose, o proxy devolveu HTTP 502 e a tela mostrou falha de integração. O fixture da Fase 6 não apareceu. | [Captura](evidencias/execucao-atual/web-indisponivel.png), [registro](evidencias/execucao-atual/web-indisponivel.json) |
+| Persistência e encerramento | Após o encerramento padrão e nova subida, o PostgreSQL continha as duas leituras originais e o painel ainda via o alerta e o score do CURATED. O job do schema concluiu novamente e os volumes foram preservados. | [Consulta ao PostgreSQL, leitura, alerta e score](evidencias/execucao-atual/persistencia.json) |
+| Oracle opcional | Instância local isolada em `FREEPDB1`. Duas cargas do mesmo CURATED por `MERGE` mantiveram 1 linha, com score 100, `HIGH` e `FLOOD`. | [Carga 1](evidencias/execucao-atual/oracle-sync-1.txt), [carga 2](evidencias/execucao-atual/oracle-sync-2.txt), [consulta SQL](evidencias/execucao-atual/oracle-consulta.json) |
+
+O cenário confirma a execução funcional e a origem dos dados. Ficam para as próximas etapas a proteção dos endpoints, a execução de scanners e CI, o agendamento e a coordenação de jobs ETL, e a mineração. Cliente nativo, LLM externo, upload OCI, carga e desempenho ficaram fora desta rodada.

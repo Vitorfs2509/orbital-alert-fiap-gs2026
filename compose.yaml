@@ -1,0 +1,148 @@
+x-tools: &tools
+  image: orbital-alert-tools:local
+  build:
+    context: .
+    dockerfile: docker/python.Dockerfile
+    target: tools
+  profiles: [jobs]
+  depends_on:
+    backend:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: orbital_alert
+      POSTGRES_USER: orbital_alert
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env local}
+      TZ: UTC
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, orbital_alert, -d, orbital_alert]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  schema:
+    image: postgres:16-bookworm
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env local}
+    volumes:
+      - ./database:/schema:ro
+    command:
+      - psql
+      - -h
+      - postgres
+      - -U
+      - orbital_alert
+      - -d
+      - orbital_alert
+      - -v
+      - ON_ERROR_STOP=1
+      - --single-transaction
+      - -f
+      - /schema/schema.sql
+      - -f
+      - /schema/migrations/001_rainfall.sql
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: integrated
+      DB_URL: jdbc:postgresql://postgres:5432/orbital_alert
+      DB_USER: orbital_alert
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env local}
+      DATA_LAKE_PATH: /lake
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      TZ: UTC
+    volumes:
+      - lake:/lake
+    depends_on:
+      schema:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, curl, -fsS, http://127.0.0.1:8080/api/health]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+      start_period: 10s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: mobile/Dockerfile
+    ports:
+      - "127.0.0.1:${ORBITAL_WEB_PORT:-8080}:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/api/health]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+
+  simulator:
+    <<: *tools
+    environment:
+      API_URL: http://backend:8080
+      IOT_OFFLINE_FILE: /tmp/orbital-offline.json
+    command: [python, iot-simulator/sensor_simulator.py, --help]
+
+  etl:
+    <<: *tools
+    environment:
+      API_URL: http://backend:8080
+      BROWSER_API_URL: http://frontend:8080
+      IOT_OFFLINE_FILE: /tmp/orbital-offline.json
+      DATA_LAKE_PATH: /lake
+    volumes:
+      - lake:/lake
+    command: [python, scripts/demo_fase7.py, --etl-only]
+
+  oracle:
+    image: ghcr.io/gvenzl/oracle-free:23.26.3-slim
+    profiles: [oracle]
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_ADMIN_PASSWORD:-}
+      APP_USER: ${ORACLE_DB_USER:-ORBITAL_ALERT}
+      APP_USER_PASSWORD: ${ORACLE_DB_PASSWORD:-}
+    volumes:
+      - oracledata:/opt/oracle/oradata
+    healthcheck:
+      test: [CMD, healthcheck.sh]
+      interval: 10s
+      timeout: 8s
+      retries: 40
+
+  oracle-sync:
+    profiles: [oracle]
+    build:
+      context: .
+      dockerfile: docker/python.Dockerfile
+      target: oracle
+    depends_on:
+      oracle:
+        condition: service_healthy
+    environment:
+      ORACLE_DB_HOST: oracle
+      ORACLE_DB_PORT: 1521
+      ORACLE_DB_SERVICE: FREEPDB1
+      ORACLE_DB_USER: ${ORACLE_DB_USER:-ORBITAL_ALERT}
+      ORACLE_DB_PASSWORD: ${ORACLE_DB_PASSWORD:-}
+    volumes:
+      - lake:/lake:ro
+    command: [python, etl/sync_curated_to_oracle.py, --curated-dir, /lake/curated]
+
+volumes:
+  pgdata:
+  lake:
+  oracledata:

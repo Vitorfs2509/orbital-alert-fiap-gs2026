@@ -20,7 +20,7 @@ sequenceDiagram
     DB-->>API: SensorReading persistido
     API->>AL: createFromReading(sensor, value)
     AL->>DB: INSERT em alerts (se cruzar o limiar)
-    API-)RAW: append do evento bruto (.jsonl)
+    API->>RAW: append do evento enriquecido (.jsonl)
     Note over API,RAW: gravação secundária:<br/>falha aqui é logada e não afeta<br/>a leitura nem o alerta
     API-->>IoT: 200 ReadingResponse
 
@@ -64,15 +64,16 @@ existia antes da Fase 5.
 
 Nada disso mudou na Fase 5.
 
-## 4. Etapa 3 — API → RAW (novo, em paralelo)
+## 4. Etapa 3 — API → RAW
 
-Depois de salvar no banco e gerar o alerta, o `ReadingService` grava o evento bruto:
+Depois de salvar no banco e avaliar o alerta, o `ReadingService` tenta gravar o evento no mesmo atendimento HTTP. Na Fase 7, `readingId` liga o evento RAW à leitura operacional:
 
 ```java
-// Data Lake em paralelo ao banco operacional: falha aqui não afeta leitura nem alerta.
+// Falha de escrita do RAW nao desfaz a leitura nem o alerta no banco operacional.
 dataLake.writeRawEvent(new RawEventDto(UUID.randomUUID().toString(), s.getId(),
     s.getRegion().getId(), s.getType().name(), req.value(), s.getUnit(),
-    sr.getMeasuredAt(), now, req.source() == null ? "API" : req.source()));
+    sr.getMeasuredAt(), now, req.source() == null || req.source().isBlank() ? "API" : req.source(),
+    sr.getId()));
 ```
 
 Garantias de segurança do fluxo:
@@ -89,8 +90,7 @@ Arquivo resultante, particionado por data de recebimento:
 data-lake/raw/2026/09/08/readings-2026-09-08.jsonl
 ```
 
-Formato **JSON Lines com append**: uma linha por evento. Escolhido porque a escrita é atômica
-por linha, não exige reler nem reescrever o arquivo, e é trivial de processar em streaming.
+Formato **JSON Lines com append**: uma linha por evento, sem reler o arquivo inteiro. O código atual não garante gravação durável ou integridade de linha em todos os cenários de falha.
 
 ## 5. Etapa 4 — RAW → TRUSTED
 

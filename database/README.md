@@ -7,6 +7,9 @@ Este diretório contém os scripts SQL iniciais do projeto **Orbital Alert**, us
 - `schema.sql`: cria a estrutura do banco com tabelas, chaves primárias, chaves estrangeiras, índices e constraints.
 - `seed.sql`: popula o banco com dados de exemplo para demonstração acadêmica.
 - `queries.sql`: consultas úteis para simular o uso do sistema no dia a dia.
+- `migrations/001_rainfall.sql`: alinha o tipo de sensor legado `RAIN` ao enum `RAINFALL`. Execute em transação. O Compose executa a migração após aplicar o schema.
+
+O [guia do Compose](../entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md) é o caminho recomendado. O cenário cria suas próprias regiões e sensores. O `seed.sql` é opcional, foi pensado para um banco vazio e contém dados ilustrativos, inclusive hashes inadequados para autenticação.
 
 ## Como executar os scripts
 

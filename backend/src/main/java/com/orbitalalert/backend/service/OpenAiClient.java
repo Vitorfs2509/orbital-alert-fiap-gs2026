@@ -8,9 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +48,10 @@ public class OpenAiClient implements AiClient {
             @Value("${orbital.ai.base-url:https://api.openai.com/v1}") String baseUrl,
             @Value("${orbital.ai.api-key:}") String apiKey,
             @Value("${orbital.ai.model:gpt-4o-mini}") String model) {
-        this.restClient = restClientBuilder.baseUrl(baseUrl).build();
+        var http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();
+        var requests = new JdkClientHttpRequestFactory(http);
+        requests.setReadTimeout(Duration.ofSeconds(6));
+        this.restClient = restClientBuilder.baseUrl(baseUrl).requestFactory(requests).build();
         this.apiKey = apiKey == null ? "" : apiKey.trim();
         this.model = model;
 
@@ -61,9 +67,9 @@ public class OpenAiClient implements AiClient {
     }
 
     @Override
-    public String generateRecommendation(String prompt, RegionRisk risk) {
+    public Recommendation generateRecommendation(String prompt, RegionRisk risk) {
         if (apiKey.isEmpty()) {
-            return fallback.generateRecommendation(prompt, risk);
+            return fallback(prompt, risk, mode());
         }
         try {
             String body = json.writeValueAsString(Map.of(
@@ -86,13 +92,17 @@ public class OpenAiClient implements AiClient {
 
             if (content == null || content.isBlank()) {
                 log.warn("Resposta vazia do provedor de IA; usando modo MOCK.");
-                return fallback.generateRecommendation(prompt, risk);
+                return fallback(prompt, risk, "MOCK_FALLBACK_RESPOSTA_VAZIA");
             }
-            return content.trim();
+            return new Recommendation(content.trim(), mode());
 
         } catch (Exception e) {
-            log.warn("Falha ao consultar o provedor de IA ({}); usando modo MOCK.", e.toString());
-            return fallback.generateRecommendation(prompt, risk);
+            log.warn("Falha ao consultar o provedor de IA ({}); usando modo MOCK.", e.getClass().getSimpleName());
+            return fallback(prompt, risk, "MOCK_FALLBACK_ERRO_PROVEDOR");
         }
+    }
+
+    private Recommendation fallback(String prompt, RegionRisk risk, String mode) {
+        return new Recommendation(fallback.generateRecommendation(prompt, risk).text(), mode);
     }
 }

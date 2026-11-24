@@ -11,11 +11,13 @@ IA de apoio à decisão e persistência analítica em **Oracle AI Database Free*
 
 ## Visão geral
 
+**Fase 7:** consulte o [guia do Compose](entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md) para iniciar PostgreSQL, backend Java 21 e Expo web, executar o cenário do sensor ao dashboard e usar Oracle opcional.
+
 O Orbital Alert observa regiões vulneráveis por meio de sensores (nível de água, chuva,
 temperatura, fumaça, umidade), guarda cada leitura recebida, calcula um **score de risco por
 região** e gera **alertas** que chegam ao aplicativo mobile.
 
-O sistema tem dois caminhos que rodam em paralelo e não dependem um do outro:
+O sistema separa o alerta operacional da análise em lote:
 
 | Caminho | O que faz | Se parar… |
 |---|---|---|
@@ -45,10 +47,8 @@ nos ETLs e no modelo de risco — basta cadastrar sensores desse tipo.
    linguagem clara para a defesa civil. Ela **não** aciona sirene, não evacua ninguém e não
    altera nenhum dado: todos os endpoints de recomendação são somente leitura. A decisão
    crítica continua sendo humana.
-3. **Histórico auditável.** Toda leitura fica gravada exatamente como chegou (camada RAW,
-   imutável). Se uma regra de qualidade mudar, o histórico inteiro pode ser reprocessado.
-4. **Reproduzível.** Backend, simulador, ETLs, testes e mobile rodam offline. O banco Oracle
-   sobe com um `docker run`.
+3. **Histórico auditável.** Com o Data Lake ativo, a API registra no RAW um evento enriquecido que identifica a leitura operacional. Os eventos preservados podem ser reprocessados.
+4. **Reproduzível.** Depois de baixar imagens e dependências, a configuração local opera sem provedor externo de IA. O perfil Oracle é opcional.
 
 ## Arquitetura
 
@@ -58,15 +58,16 @@ flowchart TD
 
     API --> DB[("Banco operacional<br/>H2 (dev) / PostgreSQL")]
     DB --> ALERT["AlertService<br/>regras de limiar"]
-    ALERT --> MOB["Aplicativo mobile<br/>Expo / React Native<br/>GET /api/alerts"]
+    ALERT --> MOB["Dashboard Expo / React Native<br/>regiões, sensores, leituras e alertas ativos"]
 
-    API --> RAW["<b>RAW / Bronze</b><br/>data-lake/raw/AAAA/MM/DD/<br/>evento como chegou"]
+    API --> RAW["<b>RAW / Bronze</b><br/>data-lake/raw/AAAA/MM/DD/<br/>evento enriquecido"]
     RAW --> ETL1["etl/raw_to_trusted.py<br/>validação · deduplicação"]
     ETL1 --> TRUSTED["<b>TRUSTED / Silver</b><br/>readings.jsonl + readings.csv"]
     TRUSTED --> ETL2["etl/trusted_to_curated.py<br/>agregação por região"]
     ETL2 --> CURATED["<b>CURATED / Gold</b><br/>region_risk_latest.json<br/>score · nível · tipo de risco"]
 
     CURATED --> AI["IA generativa<br/>GET /api/recommendations"]
+    CURATED --> MOB
     AI --> DEC["Decisão humana<br/>(a IA não executa ações)"]
 
     CURATED --> SYNCDB["etl/sync_curated_to_oracle.py<br/>MERGE idempotente"]
@@ -106,18 +107,14 @@ Spring Boot API
 2. A API grava a leitura no **banco operacional** (H2 em `dev`, PostgreSQL na modelagem oficial).
 3. O **`AlertService`** compara o valor com o limiar do tipo de sensor. Se cruzar, cria um
    `Alert` com nível de risco.
-4. O aplicativo mobile consome `GET /api/alerts` e mostra os alertas ativos.
-5. **Em paralelo e sem bloquear a resposta**, a mesma leitura é anexada à camada RAW do
-   Data Lake.
-
-O passo 5 é assíncrono ao resultado: se o Data Lake falhar, o `POST /api/readings` responde
-normalmente e o alerta é gerado do mesmo jeito.
+4. O dashboard consome `GET /api/alerts/active`, regiões, sensores, últimas leituras e `GET /api/risk`.
+5. Ao atender o POST, a API tenta acrescentar ao RAW o evento identificado pelo `readingId`. Uma falha nessa escrita é registrada separadamente e não desfaz a leitura operacional nem o alerta.
 
 ## Data Lake: RAW / TRUSTED / CURATED
 
 | Camada | Conteúdo | Garantias |
 |---|---|---|
-| **RAW** (Bronze) | Evento exatamente como chegou, JSON Lines particionado por data | Imutável, append-only. Pode ter duplicata e valor absurdo |
+| **RAW** (Bronze) | Evento enriquecido pela API, JSON Lines particionado por data | A API acrescenta eventos. A validação e a deduplicação ocorrem no ETL |
 | **TRUSTED** (Silver) | Eventos validados, deduplicados e padronizados + relatório de qualidade | Tipos corretos, rejeitados registrados em `_quality/` |
 | **CURATED** (Gold) | Um agregado por região: score, nível e tipo de risco, com os indicadores por sensor | Pronto para consumo analítico e para a IA |
 
@@ -347,22 +344,7 @@ SELECT * FROM REGION_RISK_SUMMARY;
 
 ### Mobile
 
-```powershell
-cd mobile
-npm install
-npm run start
-```
-
-Abra no Expo Go ou emulador. Por padrão o app roda com **dados mockados**, sem depender do
-backend. Para consumir a API real, crie `mobile/.env` a partir de
-[mobile/.env.example](mobile/.env.example):
-
-```env
-EXPO_PUBLIC_API_BASE_URL=http://SEU_IP_LOCAL:8080
-```
-
-Se a API estiver fora do ar, o app volta sozinho para o mock — a demonstração offline nunca
-quebra.
+No Compose, abra o endereço do frontend. O painel usa a API da mesma origem. Falhas e bases vazias aparecem na interface. O modo offline usa fixtures explicitamente com `EXPO_PUBLIC_DATA_MODE=demo`. Consulte o [guia Expo](mobile/README.md) para configurar o cliente nativo.
 
 ## Testes
 

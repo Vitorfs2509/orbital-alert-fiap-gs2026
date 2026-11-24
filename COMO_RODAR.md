@@ -1,11 +1,13 @@
 # COMO RODAR
 
+Para a Fase 7, comece pelo [guia da plataforma integrada com Docker Compose](entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md). Os passos abaixo continuam úteis para executar componentes individualmente com H2 e para consultar o procedimento Oracle da Fase 6.
+
 ## 1. Contexto rápido do projeto
 Orbital Alert é um MVP acadêmico que simula o uso de dados satelitais e sensores IoT para monitorar regiões de risco e gerar alertas preventivos de enchentes, queimadas e eventos climáticos extremos.
 
 O projeto inclui:
 - Backend Spring Boot com Swagger e profile `dev/H2`
-- Mobile React Native/Expo com dados mockados
+- Mobile React Native/Expo com API no modo integrado e fixtures no modo demonstração
 - Simulador IoT em Python
 - Banco modelado na pasta `database`
 - Documentação e evidências em `docs`
@@ -82,12 +84,7 @@ Após rodar o simulador, verifique os alertas no Swagger ou usando:
 - `GET /api/alerts/active`
 
 ## 11. Como rodar o mobile
-No terminal:
-```powershell
-cd mobile
-npm install
-npx expo start
-```
+Confira os passos de [Expo/web e dispositivo nativo](mobile/README.md). Para o cenário integrado, abra o endereço mostrado por `scripts/subir.ps1`.
 
 ## 12. Como rodar o Oracle AI Database Free (Fase 6)
 Opcional — o projeto roda inteiro sem ele. Serve para demonstrar a integração Oracle real.

@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS regions (
 CREATE TABLE IF NOT EXISTS sensors (
     id BIGSERIAL PRIMARY KEY,
     region_id BIGINT NOT NULL REFERENCES regions(id) ON DELETE CASCADE,
-    type VARCHAR(30) NOT NULL CHECK (type IN ('RAIN', 'TEMPERATURE', 'HUMIDITY', 'WATER_LEVEL', 'SMOKE')),
+    type VARCHAR(30) NOT NULL CONSTRAINT sensors_type_check CHECK (type IN ('RAINFALL', 'TEMPERATURE', 'HUMIDITY', 'WATER_LEVEL', 'SMOKE')),
     status VARCHAR(20) NOT NULL CHECK (status IN ('ACTIVE', 'INACTIVE', 'MAINTENANCE')),
     unit VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS alerts (
 CREATE INDEX IF NOT EXISTS idx_sensors_region_id ON sensors(region_id);
 CREATE INDEX IF NOT EXISTS idx_sensor_readings_sensor_id ON sensor_readings(sensor_id);
 CREATE INDEX IF NOT EXISTS idx_sensor_readings_measured_at ON sensor_readings(measured_at DESC);
+CREATE INDEX IF NOT EXISTS idx_sensor_readings_latest ON sensor_readings(sensor_id, measured_at DESC, id DESC);
 CREATE INDEX IF NOT EXISTS idx_alerts_region_id ON alerts(region_id);
 CREATE INDEX IF NOT EXISTS idx_alerts_status ON alerts(status);
 CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alerts(severity);

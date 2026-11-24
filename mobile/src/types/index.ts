@@ -17,9 +17,61 @@ export type Alert = {
   regionId: number;
   severity: RiskLevel;
   status: AlertStatus;
-  sensorData: string;
-  recommendedAction: string;
+  sensorData?: string;
+  recommendedAction?: string;
+  createdAt?: string;
   reason: string;
+};
+
+export type Sensor = {
+  id: number;
+  regionId: number;
+  type: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
+  unit: string;
+};
+
+export type Reading = {
+  id: number;
+  sensorId: number;
+  value: number;
+  measuredAt: string;
+};
+
+export type RegionRisk = {
+  regionId: number;
+  riskScore: number;
+  riskLevel: RiskLevel;
+  riskType: string;
+  readings: number;
+  generatedAt: string;
+  indicators: {
+    sensorType: string;
+    lastValue: number;
+    avgValue: number;
+    unit: string;
+    subScore: number;
+  }[];
+};
+
+export type RiskResponse = {
+  dataSource: 'CURATED_LAYER' | 'OPERATIONAL_DB_FALLBACK';
+  context: RegionRisk;
+};
+
+export type Recommendation = {
+  recommendation: string;
+  aiMode: string;
+  dataSource: RiskResponse['dataSource'];
+  generatedAt: string;
+};
+
+export type Dashboard = {
+  regions: Region[];
+  alerts: Alert[];
+  sensors: Sensor[];
+  readings: Reading[];
+  risks: RiskResponse[];
 };
 
 export type DashboardMetrics = {

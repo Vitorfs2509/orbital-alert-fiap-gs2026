@@ -74,4 +74,8 @@ public class RecommendationDto {
     /** Prompt exibido por {@code GET /api/recommendations/regions/{id}/prompt}. */
     public record PromptResponse(Long regionId, String dataSource, String aiMode, String prompt) {
     }
+
+    /** Contexto calculado, sem chamar um provedor de recomendações. */
+    public record RiskResponse(String dataSource, RegionRisk context) {
+    }
 }

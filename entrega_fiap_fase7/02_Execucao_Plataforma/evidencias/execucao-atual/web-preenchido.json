@@ -1,0 +1,40 @@
+{
+  "phase": "populated",
+  "atUtc": "2026-11-24T14:45:05.364Z",
+  "checks": [
+    "AgroSmart · Demo a3eb337ed8fc",
+    "/Risk Score IoT: 100\\/100/",
+    "/Data Lake · CURATED/",
+    "/leitura #2 ·/",
+    "/Alerta #1 ·/",
+    "Indicadores de risco",
+    "Recomendação consultiva",
+    "/^MOCK · Data Lake · CURATED/"
+  ],
+  "responses": [
+    {
+      "path": "/api/regions",
+      "status": 200
+    },
+    {
+      "path": "/api/sensors",
+      "status": 200
+    },
+    {
+      "path": "/api/alerts/active",
+      "status": 200
+    },
+    {
+      "path": "/api/readings/latest",
+      "status": 200
+    },
+    {
+      "path": "/api/risk",
+      "status": 200
+    },
+    {
+      "path": "/api/recommendations/regions/1",
+      "status": 200
+    }
+  ]
+}

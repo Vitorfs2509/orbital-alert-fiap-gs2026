@@ -13,13 +13,13 @@ INSERT INTO regions (name, city, state, latitude, longitude, satellite_risk_scor
 ('Área de Preservação Leste', 'Niterói', 'RJ', -22.883240, -43.103410, 44.70, 'LOW');
 
 INSERT INTO sensors (region_id, type, status, unit) VALUES
-(1, 'RAIN', 'ACTIVE', 'mm/h'),
+(1, 'RAINFALL', 'ACTIVE', 'mm/h'),
 (1, 'WATER_LEVEL', 'ACTIVE', 'cm'),
 (2, 'HUMIDITY', 'ACTIVE', '%'),
 (2, 'TEMPERATURE', 'ACTIVE', '°C'),
 (3, 'SMOKE', 'ACTIVE', 'ppm'),
 (3, 'TEMPERATURE', 'MAINTENANCE', '°C'),
-(4, 'RAIN', 'INACTIVE', 'mm/h');
+(4, 'RAINFALL', 'INACTIVE', 'mm/h');
 
 INSERT INTO sensor_readings (sensor_id, value, measured_at) VALUES
 (1, 42.30, CURRENT_TIMESTAMP - INTERVAL '45 minutes'),

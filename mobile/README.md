@@ -1,99 +1,28 @@
-# Mobile - Orbital Alert (Expo + React Native)
+# Aplicativo Orbital Alert · Expo
 
-## Requisitos
-- Node.js 18+
-- npm 9+
-- Expo Go no celular (Android/iOS) **ou** emulador
+Na plataforma integrada, abra a URL informada por `scripts/subir.ps1`. O Nginx serve o bundle Expo e encaminha `/api` pela mesma origem. O botão **Abrir painel** dá acesso à demonstração acadêmica local. O aplicativo não solicita credenciais nesta etapa.
 
-## Instalação
-```bash
+| Modo | Configuração | Comportamento |
+|---|---|---|
+| API (padrão) | `EXPO_PUBLIC_DATA_MODE=api`. No Compose web, deixe `EXPO_PUBLIC_API_BASE_URL` vazio. | Regiões, sensores, últimas leituras, alertas ativos, Risk Score, indicadores e recomendação vêm da API. A interface distingue carregamento, vazio, falha e sucesso. |
+| Demonstração | `EXPO_PUBLIC_DATA_MODE=demo` em `mobile/.env`. | Usa fixtures dentro do app. A origem simulada aparece no painel e nos detalhes. |
+
+O **Risk Score IoT** mostra a fonte CURATED ou o cálculo sobre o banco operacional e o horário da avaliação. A recomendação consultiva tem um botão próprio e identifica o provedor usado. Para atualizar o painel de modo API, clique em **Atualizar dados**.
+
+## Expo local e dispositivos
+
+```powershell
 cd mobile
-npm install
-```
-
-## Como executar com Expo
-```bash
+npm ci
+Copy-Item .env.example .env  # somente se .env ainda não existir
 npm run start
 ```
 
-Depois:
-- pressione `a` para Android (emulador)
-- pressione `i` para iOS (macOS)
-- ou escaneie o QR Code com o app Expo Go
+Para o modo API nativo, configure em `mobile/.env` uma `EXPO_PUBLIC_API_BASE_URL` alcançável pelo dispositivo. No emulador Android, tente `http://10.0.2.2:8080` para o host local. Em dispositivos físicos, use um endereço acessível na rede e uma configuração local explícita de encaminhamento. O Compose padrão publica em loopback. No web, prefira o Compose, pois a execução do Expo dev server e da API em origens diferentes depende da política CORS do servidor. Reinicie o Expo após editar o arquivo.
 
-## Telas disponíveis
-1. **Login**
-   - Campo de e-mail
-   - Campo de senha
-   - Botão de login acadêmico (mock)
-   - Texto curto explicando o Orbital Alert
-
-2. **Dashboard**
-   - Quantidade de alertas ativos
-   - Quantidade de regiões monitoradas
-   - Quantidade de sensores online
-   - Nível geral de risco
-   - Cards visuais com resumo e explicação de monitoramento satélite + IoT
-
-3. **Regiões**
-   - Lista de regiões monitoradas
-   - Cidade/UF
-   - Nível de risco
-   - Score de risco por satélite
-   - Quantidade de sensores
-   - Toque no card para abrir o detalhe de alerta relacionado
-
-4. **Detalhe do Alerta**
-   - Título do alerta
-   - Região
-   - Severidade
-   - Dados de sensor
-   - Ação recomendada
-   - Status
-   - Explicação do motivo do alerta
-
-## Fonte de dados: mock (padrão) ou backend real
-
-O app funciona nos dois modos e escolhe sozinho, sem alterar código.
-
-| | Modo mock (padrão) | Modo backend |
-|---|---|---|
-| Quando | `EXPO_PUBLIC_API_BASE_URL` ausente **ou** API fora do ar | variável definida e API respondendo |
-| Alertas | `src/data/mockData.ts` | `GET /api/alerts` |
-| Regiões e métricas | mock | mock |
-| Indicador na tela | ⚪ "Alertas em modo demonstração (dados mockados)" | 🟢 "Alertas do backend real (GET /api/alerts)" |
-
-### Como apontar para o backend real
-
-```bash
-cd mobile
-cp .env.example .env      # PowerShell: Copy-Item .env.example .env
+```powershell
+npm run typecheck
+npm run build:web
 ```
 
-```env
-EXPO_PUBLIC_API_BASE_URL=http://SEU_IP_LOCAL:8080
-```
-
-Reinicie o Expo depois de mudar o `.env` (`npm run start`).
-
-> No celular com Expo Go, `localhost` aponta para o próprio aparelho. Use o IP da máquina que
-> roda o backend na mesma rede Wi-Fi. Emulador Android: `http://10.0.2.2:8080`.
-
-### Por que o fallback existe
-
-A chamada tem timeout de 4 s e qualquer falha (variável ausente, API fora do ar, resposta
-inesperada, lista vazia) mantém os dados mockados. A demonstração offline — em vídeo ou no
-pitch de 3 minutos — nunca depende do backend estar no ar.
-
-A implementação fica em `src/services/api.ts` (~80 linhas). Regiões e métricas seguem mockadas
-de propósito: o `RegionDto` do backend não expõe `satelliteRiskScore` nem `sensorsCount`, e
-buscar esses números exigiria mudar o contrato da API e as telas — fora do escopo mínimo
-desta fase.
-
-## Por que dados mockados são aceitáveis nesta entrega FIAP
-Para o MVP acadêmico da Global Solution, dados mockados permitem:
-- demonstrar claramente a proposta de valor e UX do produto
-- validar o fluxo de telas e comunicação visual de risco
-- reduzir complexidade técnica inicial e risco de falhas em demo
-
-Assim, o time consegue apresentar um pitch de 3 minutos com foco em problema, solução e experiência do usuário.
+A prova de integração desta etapa foi executada no navegador. Confira o [guia do Compose](../entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md) para executar o cenário.

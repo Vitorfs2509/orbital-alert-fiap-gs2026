@@ -1,0 +1,28 @@
+ Container orbital-fase7-check-oracle-sync-run-386be352a963 Creating
+ Container orbital-fase7-check-oracle-sync-run-386be352a963 Created
+==============================================================
+Orbital Alert - sync CURATED -> Oracle AI Database Free
+==============================================================
+CURATED local   : /lake/curated
+Tabela destino  : REGION_RISK_SUMMARY
+Modo            : CARGA REAL
+Arquivo lido    : /lake/curated/region_risk_latest.json
+
+--- Conexao Oracle ---
+  host      : oracle
+  port      : 1521
+  service   : FREEPDB1
+  user      : ORBITAL_ALERT
+  dsn       : oracle:1521/FREEPDB1
+  password  : (definida)
+
+--- Carga ---
+Tabela REGION_RISK_SUMMARY : ja existia
+[ORACLE] Regiao 1 | HIGH | FLOOD | score=100 -> OK
+
+--- Resumo ---
+Banco               : oracle:1521/FREEPDB1
+Registros gravados  : 1/1
+Linhas na tabela    : 1
+
+OK: camada CURATED sincronizada com o Oracle AI Database Free.

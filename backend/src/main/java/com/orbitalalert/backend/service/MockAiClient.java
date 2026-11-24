@@ -26,13 +26,13 @@ public class MockAiClient implements AiClient {
     }
 
     @Override
-    public String generateRecommendation(String prompt, RegionRisk risk) {
+    public Recommendation generateRecommendation(String prompt, RegionRisk risk) {
         StringBuilder text = new StringBuilder();
         text.append(abertura(risk));
         text.append(" ").append(evidencia(risk));
         text.append(" ").append(acoes(risk));
         text.append(" Esta recomendacao e apoio a decisao: a execucao das acoes cabe a equipe responsavel.");
-        return text.toString();
+        return new Recommendation(text.toString(), mode());
     }
 
     private String abertura(RegionRisk risk) {

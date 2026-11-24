@@ -1,0 +1,29 @@
+{
+  "phase": "unavailable",
+  "atUtc": "2026-11-24T14:45:11.058Z",
+  "checks": [
+    "Falha de integração"
+  ],
+  "responses": [
+    {
+      "path": "/api/regions",
+      "status": 502
+    },
+    {
+      "path": "/api/risk",
+      "status": 502
+    },
+    {
+      "path": "/api/alerts/active",
+      "status": 502
+    },
+    {
+      "path": "/api/sensors",
+      "status": 502
+    },
+    {
+      "path": "/api/readings/latest",
+      "status": 502
+    }
+  ]
+}

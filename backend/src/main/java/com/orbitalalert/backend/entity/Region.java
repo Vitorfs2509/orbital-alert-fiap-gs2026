@@ -1,11 +1,15 @@
 package com.orbitalalert.backend.entity;
 import jakarta.persistence.*;import java.time.LocalDateTime;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 @Entity @Table(name="regions")
 public class Region {
  @Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;
- @Column(nullable=false) private String name; @Column(nullable=false) private String city; @Column(nullable=false,length=2) private String state;
- @Column(nullable=false) private Double latitude; @Column(nullable=false) private Double longitude;
- @Column(name="satellite_risk_score",nullable=false) private Double satelliteRiskScore=0.0;
+ @Column(nullable=false) private String name; @Column(nullable=false) private String city;
+ @JdbcTypeCode(SqlTypes.CHAR) @Column(nullable=false,length=2) private String state;
+ @JdbcTypeCode(SqlTypes.DECIMAL) @Column(nullable=false,precision=9,scale=6) private Double latitude;
+ @JdbcTypeCode(SqlTypes.DECIMAL) @Column(nullable=false,precision=9,scale=6) private Double longitude;
+ @JdbcTypeCode(SqlTypes.DECIMAL) @Column(name="satellite_risk_score",nullable=false,precision=5,scale=2) private Double satelliteRiskScore=0.0;
  @Enumerated(EnumType.STRING) @Column(name="risk_level",nullable=false) private RiskLevel riskLevel;
  @Column(name="created_at",nullable=false) private LocalDateTime createdAt=LocalDateTime.now();
  public Long getId(){return id;} public void setId(Long id){this.id=id;} public String getName(){return name;} public void setName(String name){this.name=name;}

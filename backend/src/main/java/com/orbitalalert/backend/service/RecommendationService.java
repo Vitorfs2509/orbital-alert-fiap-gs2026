@@ -3,6 +3,7 @@ package com.orbitalalert.backend.service;
 import com.orbitalalert.backend.dto.RecommendationDto.PromptResponse;
 import com.orbitalalert.backend.dto.RecommendationDto.RecommendationResponse;
 import com.orbitalalert.backend.dto.RecommendationDto.RegionRisk;
+import com.orbitalalert.backend.dto.RecommendationDto.RiskResponse;
 import com.orbitalalert.backend.entity.Region;
 import com.orbitalalert.backend.entity.SensorReading;
 import com.orbitalalert.backend.exception.NotFoundException;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,16 +66,25 @@ public class RecommendationService {
         RegionRisk risk = resolved.risk();
 
         String prompt = promptBuilder.build(risk);
-        String recommendation = aiClient.generateRecommendation(prompt, risk);
+        AiClient.Recommendation recommendation = aiClient.generateRecommendation(prompt, risk);
 
         return new RecommendationResponse(
                 risk.regionId(), risk.regionName(), risk.riskScore(), risk.riskLevel(), risk.riskType(),
-                recommendation, LocalDateTime.now(), aiClient.mode(), resolved.dataSource(), risk);
+                recommendation.text(), LocalDateTime.now(ZoneOffset.UTC), recommendation.mode(), resolved.dataSource(), risk);
     }
 
     public List<RecommendationResponse> forAllRegions() {
         return regionRepo.findAll().stream()
                 .map(region -> forRegion(region.getId()))
+                .toList();
+    }
+
+    public List<RiskResponse> allRisks() {
+        var snapshot = new HashMap<Long, RegionRisk>();
+        curated.findAll().forEach(risk -> snapshot.putIfAbsent(risk.regionId(), risk));
+        return regionRepo.findAll().stream()
+                .map(region -> resolve(region, Optional.ofNullable(snapshot.get(region.getId()))))
+                .map(risk -> new RiskResponse(risk.dataSource(), risk.risk()))
                 .toList();
     }
 
@@ -93,12 +105,15 @@ public class RecommendationService {
         Region region = regionRepo.findById(regionId)
                 .orElseThrow(() -> new NotFoundException("Região não encontrada"));
 
-        Optional<RegionRisk> fromLake = curated.findByRegionId(regionId);
+        return resolve(region, curated.findByRegionId(regionId));
+    }
+
+    private ResolvedRisk resolve(Region region, Optional<RegionRisk> fromLake) {
         if (fromLake.isPresent()) {
             return new ResolvedRisk(withRegionName(fromLake.get(), region), SOURCE_CURATED);
         }
 
-        List<SensorReading> readings = readingRepo.findBySensorRegionIdOrderByMeasuredAtAsc(regionId);
+        List<SensorReading> readings = readingRepo.findBySensorRegionIdOrderByMeasuredAtAsc(region.getId());
         return new ResolvedRisk(calculator.fromReadings(region, readings), SOURCE_DB);
     }
 

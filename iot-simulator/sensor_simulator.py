@@ -15,13 +15,14 @@ import requests
 
 API_URL = os.getenv("API_URL", "http://localhost:8080").rstrip("/")
 READINGS_ENDPOINT = f"{API_URL}/api/readings"
-OFFLINE_FILE = Path(__file__).with_name("mock_readings.json")
+OFFLINE_FILE = Path(os.getenv("IOT_OFFLINE_FILE") or Path(__file__).with_name("mock_readings.json"))
 # `source` identifica a origem do evento na camada RAW do Data Lake.
 DEFAULT_SOURCE = "IOT_SIMULATOR"
 DEFAULT_PAYLOAD = {"sensorId": 1, "value": 87.5, "source": DEFAULT_SOURCE}
 
 
 def save_offline(payload: dict) -> None:
+    OFFLINE_FILE.parent.mkdir(parents=True, exist_ok=True)
     data = []
     if OFFLINE_FILE.exists():
         try:
@@ -78,8 +79,6 @@ def main() -> int:
 
     if args.loop:
         print("Modo loop habilitado. Pressione Ctrl+C para encerrar.")
-        if not OFFLINE_FILE.exists():
-            OFFLINE_FILE.write_text("[]", encoding="utf-8")
         while True:
             try:
                 send_reading(payload)
@@ -87,9 +86,6 @@ def main() -> int:
                 pass
             time.sleep(args.interval)
     else:
-        if not OFFLINE_FILE.exists():
-            OFFLINE_FILE.write_text("[]", encoding="utf-8")
-
         try:
             send_reading(payload)
         except requests.HTTPError:

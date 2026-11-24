@@ -1,0 +1,44 @@
+ETAPA 2 / 24-11-2026 - Resumo e trechos da sessao de validacao
+
+Compose config --quiet: exit 0. Projeto de teste: orbital-fase7-check.
+Docker Engine 29.7.2, Compose 5.5.0.
+
+Build das imagens e testes Java/Expo:
+#23 [frontend build 6/6] RUN npm run typecheck && npm run build:web
+#23 5.783 App exported to: dist
+#22 16.86 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.470 s -- in com.orbitalalert.backend.OrbitalAlertBackendApplicationTests
+#22 16.90 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+#22 19.40 [INFO] BUILD SUCCESS
+#34 13.11 added 1140 packages in 13s
+Image orbital-alert-tools:local Built
+Image orbital-fase7-check-backend Built
+Image orbital-fase7-check-frontend Built
+
+Teste Python (56 casos existentes):
+----------------------------------------------------------------------
+Ran 56 tests in 0.118s
+
+OK
+
+Migracao sobre uma base PostgreSQL separada criada com o DDL anterior:
+Execucao 1: 1|1|RAIN -> 1|1|RAINFALL
+Execucao 2: 1|1|RAINFALL (mesmos id e region_id)
+
+Startup inicial: Hibernate rejeitou NUMERIC da latitude, esperava FLOAT. Mapeamento corrigido.
+Saida da subida apos down (volumes preservados):
+Container orbital-fase7-check-postgres-1 Healthy
+Container orbital-fase7-check-schema-1 Exited
+Container orbital-fase7-check-backend-1 Healthy
+Container orbital-fase7-check-backend-1 Healthy
+Container orbital-fase7-check-postgres-1 Healthy
+Container orbital-fase7-check-schema-1 Exited
+Container orbital-fase7-check-frontend-1 Healthy
+127.0.0.1:18727
+
+ETL no cenario a3eb337ed8fc:
+Eventos lidos           : 2
+Eventos rejeitados      : 0
+1    AgroSmart · Demo a3eb337ed8fc     100 HIGH     FLOOD
+Eventos lidos            : 2
+Regioes processadas      : 1
+OK: camada CURATED atualizada.

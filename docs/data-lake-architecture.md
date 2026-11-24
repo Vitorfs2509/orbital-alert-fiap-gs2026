@@ -240,3 +240,6 @@ repositório (`java -jar`). Um caminho absoluto também é aceito.
 - [ingestion-flow.md](ingestion-flow.md) — como o dado entra e percorre as camadas
 - [data-maintenance.md](data-maintenance.md) — qualidade, duplicidade, dados ausentes, retenção
 - [ai-generative-example.md](ai-generative-example.md) — prompt e recomendação da IA
+## Execução integrada da Fase 7
+
+No Compose, API e ETL compartilham o volume `lake`. O RAW inclui `readingId` como campo adicional e mantém os identificadores anteriores. Veja o [cenário e os comandos](../entrega_fiap_fase7/02_Execucao_Plataforma/COMO_RODAR_COMPOSE.md).

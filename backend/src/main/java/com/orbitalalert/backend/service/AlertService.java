@@ -14,5 +14,5 @@ import com.orbitalalert.backend.dto.AlertDto;import com.orbitalalert.backend.ent
   if(sensor.getType()==SensorType.RAINFALL && value>=60) alert=mk(sensor,"Alerta de chuva intensa","Volume de chuva elevado.",RiskLevel.HIGH);
   if(alert!=null) repo.save(alert);
  }
- private Alert mk(Sensor sensor, String t, String d, RiskLevel sev){Alert a=new Alert(); a.setRegion(sensor.getRegion()); a.setTitle(t); a.setDescription(d); a.setSeverity(sev); a.setStatus(AlertStatus.OPEN); return a;}
+ private Alert mk(Sensor sensor, String t, String d, RiskLevel sev){Alert a=new Alert(); a.setRegion(sensor.getRegion()); a.setTitle(t); a.setDescription(d); a.setSeverity(sev); a.setStatus(AlertStatus.OPEN); a.setCreatedAt(LocalDateTime.now(java.time.ZoneOffset.UTC)); return a;}
 }

@@ -6,13 +6,13 @@ import com.orbitalalert.backend.dto.RawEventDto;import com.orbitalalert.backend.
  private ReadingResponse map(SensorReading r){return new ReadingResponse(r.getId(),r.getSensor().getId(),r.getSensor().getType().name(),r.getValue(),r.getMeasuredAt());}
  public ReadingResponse create(CreateReadingRequest req){
   Sensor s=sensorRepo.findById(req.sensorId()).orElseThrow(()->new NotFoundException("Sensor não encontrado"));
-  LocalDateTime now=LocalDateTime.now();
+  LocalDateTime now=LocalDateTime.now(java.time.ZoneOffset.UTC);
   SensorReading sr=new SensorReading(); sr.setSensor(s); sr.setValue(req.value()); sr.setMeasuredAt(now); sr=repo.save(sr);
   alertService.createFromReading(s, req.value());
-  // Data Lake em paralelo ao banco operacional: falha aqui nao afeta leitura nem alerta.
+  // Falha de escrita do RAW nao desfaz a leitura nem o alerta no banco operacional.
   dataLake.writeRawEvent(new RawEventDto(UUID.randomUUID().toString(), s.getId(), s.getRegion().getId(),
     s.getType().name(), req.value(), s.getUnit(), sr.getMeasuredAt(), now,
-    req.source()==null||req.source().isBlank()?"API":req.source()));
+    req.source()==null||req.source().isBlank()?"API":req.source(), sr.getId()));
   return map(sr);
  }
  public List<ReadingResponse> latest(){return repo.findLatestPerSensor().stream().map(this::map).toList();}

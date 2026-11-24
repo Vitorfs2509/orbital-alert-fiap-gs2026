@@ -7,7 +7,7 @@ import com.orbitalalert.backend.entity.SensorReading;
 import com.orbitalalert.backend.entity.SensorType;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -50,7 +50,7 @@ public class RiskScoreCalculator {
     private static final int TREND_BONUS = 10;
 
     public RegionRisk fromReadings(Region region, List<SensorReading> readings) {
-        String generatedAt = LocalDateTime.now().toString();
+        String generatedAt = Instant.now().toString();
 
         if (readings == null || readings.isEmpty()) {
             return new RegionRisk(region.getId(), region.getName(), 0, "LOW", "NONE", null,
